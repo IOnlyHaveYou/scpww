@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录页</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/js/jquery-2.1.1.js"></script>
+    <script src="/layui/layui.js"></script>
+</head>
+<body>
+
+<div>
+    <ul class="layui-nav" lay-filter="">
+        <li class="layui-nav-item"><a href="/user/index.html">四川票务网</a></li>
+        <li class="layui-nav-item layui-this"><a href="">关于我们</a></li>
+        <li class="layui-nav-item"><a href="">帮助中心</a></li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">问题建议</a>
+
+        </li>
+<!--        <li class="layui-nav-item"><a href="">社区</a></li>-->
+    </ul>
+</div>
+
+<div class="layui-container">
+    <form class="layui-form">
+
+
+        <div class="layui-form-item" style="margin-left: 468px;font-size: 22px">
+            <label class="layui-form-label">登录</label>
+
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="user" placeholder="请输入" class="layui-input" id="username">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" placeholder="请输入" class="layui-input" id="password">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+    <button class="layui-btn" id="sub" style="margin-left: 500px;">立即提交</button>
+
+    <div class="footer" style="text-align: center;position: fixed;bottom: 0px;left: 25%">
+        <div class="copy-info">
+            <p>
+                <a href="https://www.scqckypw.com:443" title="">返回首页</a>&nbsp;|&nbsp; <a
+                    href="https://www.scqckypw.com:443/help/abus.html" title="">关于我们</a>&nbsp;|&nbsp;
+                <a href="https://www.scqckypw.com:443/help/buyTicket.html" title="">如何购票</a>&nbsp;|&nbsp; <span>服务电话：400-858-3030</span>
+            </p>
+            <p>版权所有：四川省交通运输厅道路运输管理局&nbsp;&nbsp;&nbsp;&nbsp;网站备案号：蜀ICP备05031914号&nbsp;&nbsp;<script
+                    type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+            document.write(unescape("%3Cspan id='cnzz_stat_icon_1254367912'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1254367912%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+                <span id="cnzz_stat_icon_1254367912"><a href="https://www.cnzz.com/stat/website.php?web_id=1254367912"
+                                                        target="_blank" title="站长统计"><img border="0" hspace="0"
+                                                                                          vspace="0"
+                                                                                          src="https://icon.cnzz.com/img/pic.gif"></a></span>
+                <script src=" https://s11.cnzz.com/z_stat.php?id=1254367912&amp;show=pic"
+                        type="text/javascript"></script>
+                <script src="https://c.cnzz.com/core.php?web_id=1254367912&amp;show=pic&amp;t=z" charset="utf-8"
+                        type="text/javascript"></script>
+            </p>
+        </div>
+        <div class="copy-icon">
+            <a href="http://www.cdnet110.com/" target="_blank" title=""><img
+                    src="https://image.scqckypw.com/static/scqcp/images1/jc.jpg" alt=""></a>
+        </div>
+    </div>
+
+</div>
+<!--导航条-->
+<script>
+    //注意：导航 依赖 element 模块，否则无法进行功能性操作
+    layui.use('element', function () {
+        var element = layui.element;
+
+        //…
+    });
+</script>
+
+<script src="/js/user/login.js">
+
+</script>
+
+</body>
+</html>

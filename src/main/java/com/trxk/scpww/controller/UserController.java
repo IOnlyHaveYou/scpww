@@ -2,6 +2,8 @@ package com.trxk.scpww.controller;
 
 
 import com.trxk.scpww.pojo.User;
+import com.trxk.scpww.service.userService.LoginService;
+import com.trxk.scpww.service.userService.RegService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

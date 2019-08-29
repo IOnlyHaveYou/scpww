@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class JiFenService
 {
+    //更新用户积分
     @Autowired
     JiFenMapper jiFenMapper;
     JiFen jiFen = new JiFen();
@@ -34,6 +35,7 @@ public class JiFenService
         }
     }
 
+    //创建新用户积分数据
     public  void insertUser(User user){
         jiFen.setUserId(user.getId());
         jiFenMapper.insert(jiFen);
