@@ -3,6 +3,7 @@ package com.trxk.scpww.service.userService;
 
 import com.trxk.scpww.pojo.User;
 import com.trxk.scpww.pojo.UserMapper;
+import com.trxk.scpww.service.JiFenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +18,8 @@ public class RegService {
 
     @Autowired
     private UserMapper userMapper;
-//    @Autowired
-//    private JiFenMapper jiFenMapper;
+    @Autowired
+    private JiFenService jiFenService;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -29,6 +30,8 @@ public class RegService {
             user.setId(UUID.randomUUID().toString().replace("-",""));
             System.out.println("我就是新用户---------------"+user);
             userMapper.insert(user);
+            jiFenService.insertUser(user);
+
 
             action=true;
         }catch (Exception e){
