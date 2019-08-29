@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>基本</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/js/jquery-2.1.1.js"></script>
+    <script src="/layui/layui.js"></script>
+</head>
+<body>
+<!--导航条-->
+<div>
+    <ul class="layui-nav" lay-filter="">
+        <li class="layui-nav-item"><a href="/user/index.html">四川票务网</a></li>
+        <li class="layui-nav-item layui-this"><a href="">关于我们</a></li>
+        <li class="layui-nav-item"><a href="">帮助中心</a></li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">问题建议</a>
+
+        </li>
+        <!--        <li class="layui-nav-item"><a href="">社区</a></li>-->
+    </ul>
+</div>
+
+<div class="layui-container">
+
+    <div class="layui-row">
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md4">
+            移动：6/12 | 平板：6/12 | 桌面：4/12
+        </div>
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md4">
+            移动：6/12 | 平板：6/12 | 桌面：4/12
+        </div>
+
+    </div>
+
+
+<!--footer-->
+    <div class="footer" style="text-align: center;position: fixed;bottom: 0px;left: 25%">
+        <div class="copy-info">
+            <p>
+                <a href="https://www.scqckypw.com:443" title="">返回首页</a>&nbsp;|&nbsp; <a
+                    href="https://www.scqckypw.com:443/help/abus.html" title="">关于我们</a>&nbsp;|&nbsp;
+                <a href="https://www.scqckypw.com:443/help/buyTicket.html" title="">如何购票</a>&nbsp;|&nbsp; <span>服务电话：400-858-3030</span>
+            </p>
+            <p>版权所有：四川省交通运输厅道路运输管理局&nbsp;&nbsp;&nbsp;&nbsp;网站备案号：蜀ICP备05031914号&nbsp;&nbsp;<script
+                    type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+            document.write(unescape("%3Cspan id='cnzz_stat_icon_1254367912'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1254367912%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+                <span id="cnzz_stat_icon_1254367912"><a href="https://www.cnzz.com/stat/website.php?web_id=1254367912"
+                                                        target="_blank" title="站长统计"><img border="0" hspace="0"
+                                                                                          vspace="0"
+                                                                                          src="https://icon.cnzz.com/img/pic.gif"></a></span>
+                <script src=" https://s11.cnzz.com/z_stat.php?id=1254367912&amp;show=pic"
+                        type="text/javascript"></script>
+                <script src="https://c.cnzz.com/core.php?web_id=1254367912&amp;show=pic&amp;t=z" charset="utf-8"
+                        type="text/javascript"></script>
+            </p>
+        </div>
+        <div class="copy-icon">
+            <a href="http://www.cdnet110.com/" target="_blank" title=""><img
+                    src="https://image.scqckypw.com/static/scqcp/images1/jc.jpg" alt=""></a>
+        </div>
+
+
+        <!--导航条-->
+        <script>
+            //注意：导航 依赖 element 模块，否则无法进行功能性操作
+            layui.use('element', function () {
+                var element = layui.element;
+
+                //…
+            });
+        </script>
+
+        <script>
+            $("#sub").click(function () {
+
+                $.ajax({
+                    url: "/userreg",   //请求路径
+                    type: "POST",  //请求方式
+                    asyns: true,   //true :异步 flase:同步   默认true
+                    cache: "false",  //是否缓存  false关闭缓存  目的是避免部分浏览器缓存加载出错(IE))
+                    datatype: "json",  //返回类型html, text , json
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({username: $("#username").val(), password: $("#password").val()}),//经过序列化的对象,
+                    success: function (data) {
+                        console.log("成功:" + JSON.stringify(data));
+                        alert(data.msg);
+
+                        window.location.href = data.url;
+
+                    },
+                    error: function (data) {
+                        //1响应失败 2 服务器中断 3网络中断 4 返回的不是json数据,无法解析
+                        console.log("失败:");
+                        alert("失败");
+                    }
+                });
+            })
+
+
+        </script>
+    </div>
+</div>
+</body>
+</html>

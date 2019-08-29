@@ -1,4 +1,4 @@
-package com.trxk.scpww.controller;
+package com.trxk.scpww.controller.jifencontroller;
 
 import org.springframework.stereotype.Controller;
 

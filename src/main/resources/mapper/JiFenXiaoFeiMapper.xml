@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.trxk.scpww.pojo.JiFenXiaoFeiMapper">
+
   <resultMap id="BaseResultMap" type="com.trxk.scpww.pojo.JiFenXiaoFei">
     <!--
       WARNING - @mbg.generated
@@ -10,7 +11,33 @@
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
     <result column="xiao_fei_ji_fen" jdbcType="INTEGER" property="xiaoFeiJiFen" />
     <result column="shi_yong_shi_jian" jdbcType="DATE" property="shiYongShiJian" />
+    <association property="JiFen" javaType="com.trxk.scpww.pojo.JiFen">
+      <id column="jifenid" jdbcType="BIGINT" property="jifenid" />
+      <result column="user_id" jdbcType="VARCHAR" property="userId" />
+      <result column="ji_fen" jdbcType="BIGINT" property="jiFen" />
+      <result column="geng_xin_time" jdbcType="DATE" property="gengXinTime" />
+      <result column="xiao_fei_jin_e" jdbcType="DECIMAL" property="xiaoFeiJinE" />
+      <result column="ji_fen_jin_e" jdbcType="DECIMAL" property="jiFenJinE" />
+    </association>
   </resultMap>
+
+  <select id="selectByUserIdJiFenXiaoFei" resultMap="BaseResultMap">
+       SELECT
+	t1.user_id,
+	t1.ji_fen,
+	t1.geng_xin_time,
+	t1.xiao_fei_jin_e,
+	t1.ji_fen_jin_e,
+	t2.user_id id2,
+	t2.xiao_fei_ji_fen,
+	t2.shi_yong_shi_jian
+FROM jifen t1,ji_fen_xiao_fei t2
+WHERE
+	t1.user_id = t2.user_id
+AND t1.user_id = #{userid};
+    </select>
+
+
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated

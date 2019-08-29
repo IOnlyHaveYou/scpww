@@ -1,4 +1,4 @@
-package com.trxk.scpww.service;
+package com.trxk.scpww.service.jifenservice;
 
 import com.trxk.scpww.pojo.JiFen;
 import com.trxk.scpww.pojo.JiFenMapper;
@@ -41,10 +41,8 @@ public class JiFenService
         jiFenMapper.insert(jiFen);
     }
 
+    //测试类
     public static void main(String[] args)
     {
-        double price = 251.0;
-        System.out.println((int)price/100);
-
-    }
+}
 }

@@ -30,19 +30,21 @@ public class UserController {
     public Map<String, String> login(@RequestBody User user){
         System.out.println("--------封装的user对象------"+user);
         Map<String ,String > map=new HashMap();
-        Map<String ,String > map1=new HashMap<>();
+        user=loginService.Userlogin(user);
 
+        if (user!=null){
+            map.put("code","200");
+            map.put("msg","登录成功");
+            map.put("url","/user/index.html");
+            map.put("id",user.getId());
 
+        }else {
+            map.put("code","500");
+            map.put("msg","登录失败");
+            map.put("url","/user/pageerror.html");
+        }
 
-        map.put("code","200");
-        map.put("msg","登录成功");
-        map.put("url","/user/index.html");
-
-        map1.put("code","500");
-        map1.put("msg","登录失败");
-        map1.put("url","/user/pageerror.html");
-        return loginService.Userlogin(user) ?
-                map:map1;
+        return map;
 //                "{code:200,msg:登录成功,url:/user/pagesuccess.html}":"{\"code\":500,\"msg\":\"登录失败\",\"url\":\"/user/pageerror.html\"}";
     }
 

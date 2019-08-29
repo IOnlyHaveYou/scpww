@@ -60,17 +60,17 @@ public class JiFen {
      */
     private Long jiFenJinE;
 
-    //传入JiFenXiaoFeiMapper
-    private List<JiFenXiaoFeiMapper> JiFenXiaoFeiMapperLiset;
+    //传入JiFenXiaoFei
+    private List<JiFenXiaoFei> jiFenXiaoFeiLiset;
 
-    public List<JiFenXiaoFeiMapper> getJiFenXiaoFeiMapperLiset()
+    public List<JiFenXiaoFei> getJiFenXiaoFeiLiset()
     {
-        return JiFenXiaoFeiMapperLiset;
+        return jiFenXiaoFeiLiset;
     }
 
-    public void setJiFenXiaoFeiMapperLiset(List<JiFenXiaoFeiMapper> jiFenXiaoFeiMapperLiset)
+    public void setJiFenXiaoFeiLiset(List<JiFenXiaoFei> jiFenXiaoFeiLiset)
     {
-        JiFenXiaoFeiMapperLiset = jiFenXiaoFeiMapperLiset;
+        jiFenXiaoFeiLiset = jiFenXiaoFeiLiset;
     }
 
     /**
@@ -215,5 +215,19 @@ public class JiFen {
      */
     public void setJiFenJinE(Long jiFenJinE) {
         this.jiFenJinE = jiFenJinE;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "JiFen{" +
+                "jifenid=" + jifenid +
+                ", userId='" + userId + '\'' +
+                ", jiFen=" + jiFen +
+                ", gengXinTime=" + gengXinTime +
+                ", xiaoFeiJinE=" + xiaoFeiJinE +
+                ", jiFenJinE=" + jiFenJinE +
+                ", jiFenXiaoFeiLiset=" + jiFenXiaoFeiLiset +
+                '}';
     }
 }
