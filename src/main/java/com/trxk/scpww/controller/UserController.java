@@ -46,6 +46,23 @@ public class UserController {
 //                "{code:200,msg:登录成功,url:/user/pagesuccess.html}":"{\"code\":500,\"msg\":\"登录失败\",\"url\":\"/user/pageerror.html\"}";
     }
 
+    @RequestMapping(value = "/usercheck", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, String> userCheck(@RequestBody Map<String ,String> username){
+        System.out.println("前台传进来的username-------"+username);
+
+        Map<String ,String > map=new HashMap();
+        Map<String ,String > map1=new HashMap<>();
+
+        map.put("code","200");
+        map.put("msg","该用户名可用");
+
+        map1.put("code","500");
+        map1.put("msg","该用户名已存在");
+        return regService.userCheckReg(username.get("username")) ?
+                map:map1;
+//                "{code:200,msg:登录成功,url:/user/pagesuccess.html}":"{\"code\":500,\"msg\":\"登录失败\",\"url\":\"/user/pageerror.html\"}";
+    }
     @RequestMapping(value = "/userreg", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, String> reg(@RequestBody User user){
@@ -57,7 +74,7 @@ public class UserController {
 
         map.put("code","200");
         map.put("msg","注册成功");
-        map.put("url","/user/index.html");
+        map.put("url","/user/login.html");
 
         map1.put("code","500");
         map1.put("msg","注册失败");

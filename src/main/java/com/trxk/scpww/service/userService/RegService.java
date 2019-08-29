@@ -22,18 +22,33 @@ public class RegService {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean userReg(User user){
-        boolean action=false;
+    public boolean userReg(User user) {
+        boolean action = false;
         try {
 
-            user.setId(UUID.randomUUID().toString().replace("-",""));
-            System.out.println("我就是新用户---------------"+user);
+            user.setId(UUID.randomUUID().toString().replace("-", ""));
+            System.out.println("我就是新用户---------------" + user);
             userMapper.insert(user);
 
-            action=true;
-        }catch (Exception e){
+            action = true;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return action;
     }
+
+    /**
+     * 用户名重名验证
+     * @param username
+     * @return
+     */
+    public boolean userCheckReg(String username) {
+        boolean action = true;
+        if (userMapper.selectByUserName(username)!=null){
+            action=false;
+        }
+        return action;
+    }
+
+
 }

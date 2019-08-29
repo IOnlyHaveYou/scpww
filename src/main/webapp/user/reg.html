@@ -33,7 +33,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">账号</label>
             <div class="layui-input-block">
-                <input type="text" name="user" placeholder="请输入" class="layui-input" id="username">
+                <input type="text" name="user" placeholder="请输入" class="layui-input" id="username"><span id="span01"></span>
             </div>
         </div>
         <div class="layui-form-item">
@@ -111,6 +111,35 @@
                         //1响应失败 2 服务器中断 3网络中断 4 返回的不是json数据,无法解析
                         console.log("失败:");
                         alert("失败");
+                    }
+                });
+            })
+
+            $("#username").blur(function () {
+
+                $.ajax({
+                    url: "/usercheck",   //请求路径
+                    type: "POST",  //请求方式
+                    asyns: true,   //true :异步 flase:同步   默认true
+                    cache: "false",  //是否缓存  false关闭缓存  目的是避免部分浏览器缓存加载出错(IE))
+                    datatype: "json",  //返回类型html, text , json
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({username: $("#username").val(), password: $("#password").val()}),//经过序列化的对象,
+                    success: function (data) {
+                        console.log("成功:" + JSON.stringify(data));
+                        if (data.code==200){
+
+                            $("#span01").html(data.msg)
+                            $("#span01").css("color","green")
+                        }else {
+                            $("#span01").html(data.msg)
+                            $("#span01").css("color","red")
+                        }
+
+                    },
+                    error: function (data) {
+                        //1响应失败 2 服务器中断 3网络中断 4 返回的不是json数据,无法解析
+                        console.log("失败:");
                     }
                 });
             })

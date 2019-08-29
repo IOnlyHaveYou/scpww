@@ -50,4 +50,6 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     User selectUserByNameAndPassword(User record);
+
+    User selectByUserName(String username);
 }
