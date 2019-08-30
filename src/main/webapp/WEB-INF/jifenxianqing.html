@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>积分详情</title>
+</head>
+<body>
+
+<h1>这是积分页面</h1>
+
+
+<script>
+    $("#jifen").on('click',function(){
+        var id = "919e7e12d65542b9b3f4a9088d90deea";
+        var user = {id: id};
+        console.log(user);
+        $.ajax({
+            url: "/chaXunJiFen",   // 请求路径  url-pattern  基于当前工程的绝对路径
+            type: "post",            // 请求的方式，不区分大小写
+            async: true,             // 是否异步，true是默认值，false为同步请求
+            cache: false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+            datatype: "json",        // 返回类型，text文本、html页面、json数据
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify(user),  // k-v参数
+            success: function (data){
+                console.log(JSON.stringify(data));
+                console.log(JSON.stringify(data.jiFen));
+                console.log(JSON.stringify(data.jiFenXiaoFei));
+                alert("........");
+                /*  if(data.code ==200) {
+                      if(data.msg == "更新失败"){
+                          alert("更新失败")
+                      }
+                      if(data.msg == "更新成功"){
+                          alert("更新成功")
+                      }
+                  }*/
+
+            },
+            error: function (data) {
+                alert(".......")
+                console.log("数据异常");
+            }
+        });
+
+    });
+
+</script>
+
+</body>
+</html>

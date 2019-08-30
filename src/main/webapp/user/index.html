@@ -8,7 +8,8 @@
     <script src="/js/jquery-3.3.1.min.js"></script>
     <script>
         $(function () {
-            if (sessionStorage.getItem("userId") != null) {
+            var userId = sessionStorage.getItem("userId");
+            if (userId != null) {
                 $("#ul01").html("  <li class=\"layui-nav-item\">\n" +
                     "                    <img src=\"http://t.cn/RCzsdCq\" class=\"layui-nav-img\">\n" +
                     "                    " + sessionStorage.getItem("username") + "\n" +
@@ -48,7 +49,7 @@
             <li class="layui-nav-item">
                 <a href="javascript:;">积分系统</a>
                 <dl class="layui-nav-child">
-                    <dd><a href="">我的积分</a></dd>
+                    <dd><a href="/jifen.html" id="jifen">我的积分</a></dd>
                     <dd><a href="">积分活动</a></dd>
                     <dd><a href="">积分说明</a></dd>
                 </dl>
@@ -129,6 +130,18 @@
 
     });
 </script>
+
+<!--<script src="/js/user/index.js"></script>-->
+
+<script>
+    $(function () {
+
+        $("#jifen").click(function () {
+            sessionStorage.setItem("userId", userId);
+            window.location.href = "/jifen.html";
+        })
+</script>
+
 <script>
     layui.use(['carousel', 'form'], function () {
         var carousel = layui.carousel

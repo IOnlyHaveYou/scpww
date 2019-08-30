@@ -146,4 +146,16 @@ public class JiFenXiaoFei {
     public void setShiYongShiJian(Date shiYongShiJian) {
         this.shiYongShiJian = shiYongShiJian;
     }
+
+    @Override
+    public String toString()
+    {
+        return "JiFenXiaoFei{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", xiaoFeiJiFen=" + xiaoFeiJiFen +
+                ", shiYongShiJian=" + shiYongShiJian +
+                ", jiFen=" + jiFen +
+                '}';
+    }
 }
