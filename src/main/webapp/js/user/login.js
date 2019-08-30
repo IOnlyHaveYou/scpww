@@ -20,8 +20,13 @@ $(function () {
                 alert(data.msg);
                 if (data.code == 200) {
                     sessionStorage.setItem("userId", data.id);
-                    sessionStorage.setItem("userPhone", username);
-                    window.location.href = data.url;
+                    sessionStorage.setItem("username", data.username);
+                    if (sessionStorage.getItem("currentUrl")!=null){
+                        window.location.href=sessionStorage.getItem("currentUrl")
+                    } else {
+
+                        window.location.href = data.url;
+                    }
                 }
 
             },
