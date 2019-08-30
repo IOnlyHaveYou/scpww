@@ -38,21 +38,6 @@ public class JiFenChaXunService
         {
             //查询积分数据
             JiFen jiFen1= jiFenMapper.selectUserId(jiFen);
-          /*  //查询积分数据详情
-            List<JiFenXiaoFei> jiFenXiaoFeiList = jiFenXiaoFeiMapper
-                    .selectByUserId(jiFenXiaoFei);
-            for (JiFenXiaoFei jiFenXiaoFei1:jiFenXiaoFeiList){
-                System.out.println("------jiFenXiaoFei1------"+jiFenXiaoFei1.getXiaoFeiJiFen());
-
-                System.out.println("------jiFenXiaoFei1------"
-                        +simpleDateFormat.format(jiFenXiaoFei1.getShiYongShiJian()));
-
-                Object[] jifenxiangqing ={jiFenXiaoFei1.getXiaoFeiJiFen()
-                        ,simpleDateFormat.format(jiFenXiaoFei1.getShiYongShiJian())};
-                System.out.println(Arrays.toString(jifenxiangqing));
-                list.add(jifenxiangqing);
-
-            }*/
             map.put("code","200");
             map.put("msg","查询成功");
             map.put("jiFen",""+jiFen1.getJiFen());
