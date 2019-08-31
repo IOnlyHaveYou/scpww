@@ -38,10 +38,17 @@ public class JiFenChaXunService
         {
             //查询积分数据
             JiFen jiFen1= jiFenMapper.selectUserId(jiFen);
-            map.put("code","200");
-            map.put("msg","查询成功");
-            map.put("jiFen",""+jiFen1.getJiFen());
-            return map;
+            if(jiFen1.getJiFen() ==null ){
+                map.put("code","200");
+                map.put("msg","查询成功");
+                map.put("jiFen",""+0);
+                return map;
+            }else {
+                map.put("code","200");
+                map.put("msg","查询成功");
+                map.put("jiFen",""+jiFen1.getJiFen());
+                return map;
+            }
         }catch (Exception e){
             map.put("code","200");
             map.put("msg","数据异常");

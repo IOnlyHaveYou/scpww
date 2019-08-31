@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,7 @@ public class JiFenXiaoFeiService
     //注入JiFenXiaoFeiMapper
     @Autowired
     JiFenXiaoFeiMapper jiFenXiaoFeiMapper;
-
-    List<Object> list;
+    List<Object> list = new ArrayList<>();
     public Map<String,String> byUserIdChaXun(User user){
          //把userid注入到jifenxiaofei对象里面
         jiFenXiaoFei.setUserId(user.getId());
@@ -38,21 +38,17 @@ public class JiFenXiaoFeiService
             //查询积分数据详情
             List<JiFenXiaoFei> jiFenXiaoFeiList = jiFenXiaoFeiMapper
                     .selectByUserId(jiFenXiaoFei);
-            System.out.println(jiFenXiaoFeiList);
             for (JiFenXiaoFei jiFenXiaoFei1:jiFenXiaoFeiList){
-                System.out.println("------jiFenXiaoFei1------"+jiFenXiaoFei1.getXiaoFeiJiFen());
+                Object[]jifenxiangqing ={jiFenXiaoFei1.getXiaoFeiJiFen(),
+                simpleDateFormat.format(jiFenXiaoFei1.getShiYongShiJian())};
+                //把查询出来需要的消费积分数据注入List集合中
+                list.add(Arrays.toString(jifenxiangqing));
 
-                System.out.println("------jiFenXiaoFei1------"
-                        +simpleDateFormat.format(jiFenXiaoFei1.getShiYongShiJian()));
-
-                Object[] jifenxiangqing ={jiFenXiaoFei1.getXiaoFeiJiFen()
-                        ,simpleDateFormat.format(jiFenXiaoFei1.getShiYongShiJian())};
-                System.out.println(Arrays.toString(jifenxiangqing));
 
             }
             map.put("code","200");
             map.put("msg","查询成功");
-            map.put("jiFen",""+list);
+            map.put("jiFenXiaoFei",""+list);
             return map;
         }catch (Exception e){
             map.put("code","200");

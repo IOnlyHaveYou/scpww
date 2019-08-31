@@ -134,4 +134,15 @@ public class JiFenHuoQu {
     public void setTime(Date time) {
         this.time = time;
     }
+
+    @Override
+    public String toString()
+    {
+        return "JiFenHuoQu{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", huoQuJiFen=" + huoQuJiFen +
+                ", time=" + time +
+                '}';
+    }
 }
