@@ -29,6 +29,19 @@
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <!--dataSource属性指定要用到的连接池-->
         <property name="dataSource" ref="dataSource" />
+        <!--分页配置-->
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <!--使用下面的方式配置参数，一行配置一个 -->
+                        <value>
+                            helperDialect=mysql
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
         <!--configLocation属性指定mybatis的核心配置文件-->
         <property name="configLocation" value="classpath:mybatis/mybatis.xml" />
         <!-- 自动扫描mapping.xml文件 -->

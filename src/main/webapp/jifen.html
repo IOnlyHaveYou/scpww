@@ -57,8 +57,42 @@
         <div class="layui-tab-item layui-show">
             我的积分:<input value="" id="jifen1" readonly>
         </div>
-        <div class="layui-tab-item">消费积分详情查询</div>
-        <div class="layui-tab-item">获取积分详情查询</div>
+        <div class="layui-tab-item">
+            <table id="mytable">
+                <tr>
+                    <td>序号</td>
+                    <td>消费积分数</td>
+                    <td>消费积分日期</td>
+                </tr>
+            </table>
+            <div>总共多少条:<span id="count"></span>条</div>
+            <div>总共多少页:<span id="allPage"></span>页</div>
+            <div>当前第几页:<span id="nowPage"></span>页</div>
+            <div>每页显示多少条:<input type="text" id="showCount" value="7">条</div>
+            <button onclick="ff('1')">首页</button>&nbsp;&nbsp;&nbsp;
+            <button onclick="ff('-1')">上一页</button>&nbsp;&nbsp;&nbsp;
+            <button onclick="ff('+1')">下一页</button>&nbsp;&nbsp;&nbsp;
+            <button onclick="ff('0')">末页</button>&nbsp;&nbsp;&nbsp;
+            <div id="onlyPage"></div>
+        </div>
+        <div class="layui-tab-item">
+            <table id="mytable1">
+                <tr>
+                    <td>序号</td>
+                    <td>消费积分数</td>
+                    <td>消费积分日期</td>
+                </tr>
+            </table>
+            <div>总共多少条:<span id="count1"></span>条</div>
+            <div>总共多少页:<span id="allPage1"></span>页</div>
+            <div>当前第几页:<span id="nowPage1"></span>页</div>
+            <div>每页显示多少条:<input type="text" id="showCount1" value="7">条</div>
+            <button onclick="ff('1')">首页</button>&nbsp;&nbsp;&nbsp;
+            <button onclick="ff('-1')">上一页</button>&nbsp;&nbsp;&nbsp;
+            <button onclick="ff('+1')">下一页</button>&nbsp;&nbsp;&nbsp;
+            <button onclick="ff('0')">末页</button>&nbsp;&nbsp;&nbsp;
+            <div id="onlyPage1"></div>
+        </div>
     </div>
 </div>
 
@@ -79,7 +113,6 @@
     $("#jifen").on('click',function(){
         var userId = sessionStorage.getItem("userId");
         var user = {id: userId};
-        console.log(user);
         $.ajax({
             url: "/chaXunJiFen",   // 请求路径  url-pattern  基于当前工程的绝对路径
             type: "post",            // 请求的方式，不区分大小写
@@ -104,9 +137,143 @@
     //消费积分详情查询
     $("#jifenxiaofei").on('click',function(){
         var userId = sessionStorage.getItem("userId");
-        var user = {id: userId};
-        console.log(user);
-        $.ajax({
+        // 默认nowPage从第一页开始
+        var nowPage = 1;
+        var endPage = 0;
+        function ff(nowPageParam) {
+            /*console.log("nowPageParam=" + nowPageParam);*/
+            if(nowPageParam === 1 || nowPageParam === '1') {
+                /*console.log("封装首页:" + nowPageParam);*/
+                nowPage = 1;
+            }
+            else if(nowPageParam == '0') {   // 如果click时间传递的是0，代表最后一页，把总页码传递给当前页码
+                nowPage = endPage;
+            }
+            else {
+                /*console.log(nowPage + nowPageParam);*/
+                nowPage = eval(nowPage + nowPageParam);
+            }
+            console.log("nowPage=" + nowPage);
+
+            var user = {id: userId,"nowPage":nowPage,"showCount":$("#showCount").val()};
+            console.log(user);
+
+            $.ajax({
+                url: "/chaJiFenXiaoFei",   // 请求路径  url-pattern  基于当前工程的绝对路径
+                type: "post",            // 请求的方式，不区分大小写
+                async: true,             // 是否异步，true是默认值，false为同步请求
+                cache: false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+                datatype: "json",        // 返回类型，text文本、html页面、json数据
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(user),  // nowPage代表第一页，showCount代表每页显示多少条
+                success: function (data) {
+                    /*console.log(JSON.stringify(data));*/
+                    if(data.code == 200) {
+                        // 把后台服务传递过来的总页码，当做最后一页的页码处理
+                        endPage = data.allPage;
+                        nowPage = data.nowPage;
+                        // 获取总条数
+                        $("#count").html(data.PageInfo.total);
+                        // 获取总页数
+                        $("#allPage").html(data.PageInfo.pages);
+                        // 获取当前页码
+                        $("#nowPage").html(data.PageInfo.pageNum);
+
+                        $("#mytable").html("<tr>\n" +
+                            "            <td>序号</td>\n" +
+                            "            <td>消费积分数</td>\n" +
+                            "            <td>消费积分日期</td>\n" +
+                            "        </tr>");
+                        for(x in data.page) { //  "0" + "1"  = "0+1"
+                            $("#mytable").append("<tr>\n" +
+                                "            <td>" + eval(x + "+1") + "</td>\n" +
+                                "            <td>" + data.page[x].xiaoFeiJiFen+ "</td>\n" +
+                                "            <td>" + data.page[x].shiYongShiJian + "</td>\n" +
+                                "        </tr>");
+                        }
+
+                        $("#onlyPage").html("");
+                        for(var i = 0; i < endPage; i++) {
+                            if(i == 0) {
+                                $("#onlyPage").append("<a href=\"#\" onclick=\"ff2('1')\">1</a>&nbsp;&nbsp;&nbsp;");
+                            }
+                            else {
+                                $("#onlyPage").append("<a href=\"#\" onclick=\"ff2('" + (i + 1) + "')\">" + (i + 1) + "</a>&nbsp;&nbsp;&nbsp;");
+                            }
+                        }
+                    }
+                    else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (data) {
+                    console.log("请求错误:" + JSON.stringify(data));
+                }
+            });
+        }
+        ff(nowPage);
+
+
+
+        function ff2(nowPageParam) {
+            var userId = sessionStorage.getItem("userId");
+
+            console.log("nowPageParam=" + nowPageParam);
+
+            $.ajax({
+                url: "/chaJiFenXiaoFei",   // 请求路径  url-pattern  基于当前工程的绝对路径
+                type: "post",            // 请求的方式，不区分大小写
+                async: true,             // 是否异步，true是默认值，false为同步请求
+                cache: false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+                datatype: "json",        // 返回类型，text文本、html页面、json数据
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({id:userId,"nowPage":nowPageParam,"showCount":$("#showCount").val()}),  // nowPage代表第一页，showCount代表每页显示多少条
+                success: function (data) {
+                    /*console.log(JSON.stringify(data));*/
+                    if(data.code == 200) {
+                        // 把后台服务传递过来的总页码，当做最后一页的页码处理
+                        endPage = data.allPage;
+                        nowPage = data.nowPage;
+                        // 获取总条数
+                        $("#count").html(data.PageInfo.total);
+                        // 获取总页数
+                        $("#allPage").html(data.PageInfo.pages);
+                        // 获取当前页码
+                        $("#nowPage").html(data.PageInfo.pageNum);
+
+                        $("#mytable").html("<tr>\n" +
+                            "            <td>序号</td>\n" +
+                            "            <td>消费积分数</td>\n" +
+                            "            <td>消费积分日期</td>\n" +
+                            "        </tr>");
+                        for(x in data.page) { //  "0" + "1"  = "0+1"
+                            $("#mytable").append("<tr>\n" +
+                                "            <td>" + eval(x + "+1") + "</td>\n" +
+                                "            <td>" + data.page[x].xiaoFeiJiFen + "</td>\n" +
+                                "            <td>" + data.page[x].shiYongShiJian + "</td>\n" +
+                                "        </tr>");
+                        }
+
+                        $("#onlyPage").html("");
+                        for(var i = 0; i < endPage; i++) {
+                            if(i == 0) {
+                                $("#onlyPage").append("<a href=\"#\" onclick=\"ff2('1')\">1</a>&nbsp;&nbsp;&nbsp;");
+                            }
+                            else {
+                                $("#onlyPage").append("<a href=\"#\" onclick=\"ff2('" + (i + 1) + "')\">" + (i + 1) + "</a>&nbsp;&nbsp;&nbsp;");
+                            }
+                        }
+                    }
+                    else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (data) {
+                    console.log("请求错误:" + JSON.stringify(data));
+                }
+            });
+        }
+        /*$.ajax({
             url: "/chaJiFenXiaoFei",   // 请求路径  url-pattern  基于当前工程的绝对路径
             type: "post",            // 请求的方式，不区分大小写
             async: true,             // 是否异步，true是默认值，false为同步请求
@@ -124,16 +291,150 @@
                 alert(".......")
                 console.log("数据异常");
             }
-        });
+        });*/
 
     });
 
     //获取积分详情查询
     $("#jifenhuoqu").on('click',function(){
         var userId = sessionStorage.getItem("userId");
-        var user = {id: userId};
-        console.log(user);
-        $.ajax({
+        // 默认nowPage从第一页开始
+        var nowPage1 = 1;
+        var endPage1 = 0;
+        function ff(nowPageParam) {
+            /*console.log("nowPageParam=" + nowPageParam);*/
+            if(nowPageParam === 1 || nowPageParam === '1') {
+                /*console.log("封装首页:" + nowPageParam);*/
+                nowPage1 = 1;
+            }
+            else if(nowPageParam == '0') {   // 如果click时间传递的是0，代表最后一页，把总页码传递给当前页码
+                nowPage1 = endPage1;
+            }
+            else {
+                console.log(nowPage1 + nowPageParam);
+                nowPage1 = eval(nowPage1 + nowPageParam);
+            }
+            console.log("nowPage=" + nowPage1);
+
+            var user = {id: userId,"nowPage":nowPage1,"showCount":$("#showCount1").val()};
+            console.log(user);
+
+            $.ajax({
+                url: "/chaXunJiFenHuoQu",   // 请求路径  url-pattern  基于当前工程的绝对路径
+                type: "post",            // 请求的方式，不区分大小写
+                async: true,             // 是否异步，true是默认值，false为同步请求
+                cache: false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+                datatype: "json",        // 返回类型，text文本、html页面、json数据
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(user),  // nowPage代表第一页，showCount代表每页显示多少条
+                success: function (data) {
+                    /*console.log(JSON.stringify(data));*/
+                    if(data.code == 200) {
+                        // 把后台服务传递过来的总页码，当做最后一页的页码处理
+                        endPage = data.allPage1;
+                        nowPage = data.nowPage1;
+                        // 获取总条数
+                        $("#count1").html(data.PageInfo.total);
+                        // 获取总页数
+                        $("#allPage1").html(data.PageInfo.pages);
+                        // 获取当前页码
+                        $("#nowPage1").html(data.PageInfo.pageNum);
+
+                        $("#mytable1").html("<tr>\n" +
+                            "            <td>序号</td>\n" +
+                            "            <td>获取积分数</td>\n" +
+                            "            <td>获取积分日期</td>\n" +
+                            "        </tr>");
+                        for(x in data.page) { //  "0" + "1"  = "0+1"
+                            $("#mytable1").append("<tr>\n" +
+                                "            <td>" + eval(x + "+1") + "</td>\n" +
+                                "            <td>" + data.page[x].huoQuJiFen+ "</td>\n" +
+                                "            <td>" + data.page[x].time + "</td>\n" +
+                                "        </tr>");
+                        }
+
+                        $("#onlyPage1").html("");
+                        for(var i = 0; i < endPage; i++) {
+                            if(i == 0) {
+                                $("#onlyPage1").append("<a href=\"#\" onclick=\"ff2('1')\">1</a>&nbsp;&nbsp;&nbsp;");
+                            }
+                            else {
+                                $("#onlyPage1").append("<a href=\"#\" onclick=\"ff2('" + (i + 1) + "')\">" + (i + 1) + "</a>&nbsp;&nbsp;&nbsp;");
+                            }
+                        }
+                    }
+                    else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (data) {
+                    console.log("请求错误:" + JSON.stringify(data));
+                }
+            });
+        }
+        ff(nowPage1);
+
+
+
+        function ff2(nowPageParam) {
+            var userId = sessionStorage.getItem("userId");
+
+            console.log("nowPageParam=" + nowPageParam);
+
+            $.ajax({
+                url: "/chaJiFenXiaoFei",   // 请求路径  url-pattern  基于当前工程的绝对路径
+                type: "post",            // 请求的方式，不区分大小写
+                async: true,             // 是否异步，true是默认值，false为同步请求
+                cache: false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+                datatype: "json",        // 返回类型，text文本、html页面、json数据
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify({id:userId,"nowPage":nowPageParam,"showCount":$("#showCount1").val()}),  // nowPage代表第一页，showCount代表每页显示多少条
+                success: function (data) {
+                    /*console.log(JSON.stringify(data));*/
+                    if(data.code == 200) {
+                        // 把后台服务传递过来的总页码，当做最后一页的页码处理
+                        endPage = data.allPage1;
+                        nowPage = data.nowPage1;
+                        // 获取总条数
+                        $("#count1").html(data.PageInfo.total);
+                        // 获取总页数
+                        $("#allPage1").html(data.PageInfo.pages);
+                        // 获取当前页码
+                        $("#nowPage1").html(data.PageInfo.pageNum);
+
+                        $("#mytable1").html("<tr>\n" +
+                            "            <td>序号</td>\n" +
+                            "            <td>消费积分数</td>\n" +
+                            "            <td>消费积分日期</td>\n" +
+                            "        </tr>");
+                        for(x in data.page) { //  "0" + "1"  = "0+1"
+                            $("#mytable1").append("<tr>\n" +
+                                "            <td>" + eval(x + "+1") + "</td>\n" +
+                                "            <td>" + data.page[x].huoQuJiFen + "</td>\n" +
+                                "            <td>" + data.page[x].time + "</td>\n" +
+                                "        </tr>");
+                        }
+
+                        $("#onlyPage1").html("");
+                        for(var i = 0; i < endPage; i++) {
+                            if(i == 0) {
+                                $("#onlyPage1").append("<a href=\"#\" onclick=\"ff2('1')\">1</a>&nbsp;&nbsp;&nbsp;");
+                            }
+                            else {
+                                $("#onlyPage1").append("<a href=\"#\" onclick=\"ff2('" + (i + 1) + "')\">" + (i + 1) + "</a>&nbsp;&nbsp;&nbsp;");
+                            }
+                        }
+                    }
+                    else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (data) {
+                    console.log("请求错误:" + JSON.stringify(data));
+                }
+            });
+        }
+        /*$.ajax({
             url: "/chaXunJiFenHuoQu",   // 请求路径  url-pattern  基于当前工程的绝对路径
             type: "post",            // 请求的方式，不区分大小写
             async: true,             // 是否异步，true是默认值，false为同步请求
@@ -149,7 +450,7 @@
                 alert(".......")
                 console.log("数据异常");
             }
-        });
+        });*/
 
     });
 
