@@ -10,6 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+/**
+ *
+ * 新用户注册
+ */
 @Service
 public class RegService {
     public RegService() {

@@ -140,6 +140,9 @@
       <if test="userIdentity != null">
         user_identity = #{userIdentity,jdbcType=INTEGER},
       </if>
+      <if test="genXingTime != null">
+        genxing_time = #{genXingTime,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>

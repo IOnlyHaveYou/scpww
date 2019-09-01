@@ -1,4 +1,6 @@
 $(function () {
+    // 右上角用户登录后显示模块
+
     var userId = sessionStorage.getItem("userId");
     if (userId != null) {
         $("#ul01").html("  <li class=\"layui-nav-item\">\n" +

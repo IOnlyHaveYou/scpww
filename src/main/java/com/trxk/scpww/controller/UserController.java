@@ -51,7 +51,6 @@ public class UserController {
         }
 
         return map;
-//                "{code:200,msg:登录成功,url:/user/pagesuccess.html}":"{\"code\":500,\"msg\":\"登录失败\",\"url\":\"/user/pageerror.html\"}";
     }
 
     //重名检测
@@ -70,10 +69,9 @@ public class UserController {
         map1.put("msg", "该用户名已存在");
         return regService.userCheckReg(username.get("username")) ?
                 map : map1;
-//                "{code:200,msg:登录成功,url:/user/pagesuccess.html}":"{\"code\":500,\"msg\":\"登录失败\",\"url\":\"/user/pageerror.html\"}";
     }
 
-    //用户给注册
+    //用户注册
     @RequestMapping(value = "/userreg", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, String> reg(@RequestBody User user) {
@@ -91,15 +89,14 @@ public class UserController {
         map1.put("url", "/user/pageerror.html");
         return regService.userReg(user) ?
                 map : map1;
-//                "{code:200,msg:登录成功,url:/user/pagesuccess.html}":"{\"code\":500,\"msg\":\"登录失败\",\"url\":\"/user/pageerror.html\"}";
     }
 
     //用户基本资料查询
     @RequestMapping(value = "/userSelect", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, String> userQuery(@RequestBody Map<String, String> user) {
+    public Map userQuery(@RequestBody Map<String, String> user) {
         System.out.println("--------封装的user对象------" + user);
-        Map<String, String> map = new HashMap();
+        Map map = new HashMap();
         User user1 = queryService.userQuery(user.get("userId"));
         if (user1 != null) {
 
@@ -107,7 +104,8 @@ public class UserController {
             map.put("msg", "查询成功");
             map.put("username", user1.getUsername());
             map.put("realname", user1.getRealname());
-//            map.put("telephone", user1.getTelephone().toString());
+            map.put("telephone", user1.getTelephone());
+            map.put("userIdentity",user1.getUserIdentity());
 //        map.put("url","/user/login.html");
         } else {
             map.put("code", "500");

@@ -8,7 +8,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.SimpleFormatter;
 
+/**
+ *
+ * 用户基本资料更新
+ */
 @Service
 public class UpdateService {
     public UpdateService() {
@@ -20,6 +27,8 @@ public class UpdateService {
 
     @Transactional(rollbackFor = Exception.class)
     public boolean UserUpdate(User user) {
+        //更新时间设置
+        user.setGenXingTime(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         boolean action=false;
         if ( userMapper.updateByPrimaryKeySelective(user)!=0){
             action=true;

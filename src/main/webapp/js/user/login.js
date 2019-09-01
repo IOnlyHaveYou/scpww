@@ -1,5 +1,5 @@
 $(function () {
-
+    // 用户登录js
     $("#sub").click(function () {
         var username = $("#username").val();
         var password = $("#password").val();
@@ -37,4 +37,10 @@ $(function () {
             }
         });
     })
+    // 回车事件
+    $(document).keydown(function(event){
+        if(event.keyCode==13){            
+            $("#sub").click();                
+        }
+    });  
 })
