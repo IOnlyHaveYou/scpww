@@ -49,7 +49,7 @@
                         <dd><a href="javascript:;">汽车票订单</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item">
+                <li class="layui-nav-item layui-nav-itemed">
                     <a href="javascript:;">会员中心</a>
                     <dl class="layui-nav-child">
                         <dd><a href="">基本资料</a></dd>
@@ -109,6 +109,13 @@
                         <div class="layui-input-block">
                             <input type="text" name="title" required lay-verify="required" autocomplete="off"
                                    class="layui-input" id="telephone">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">身份证号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" required lay-verify="required" autocomplete="off"
+                                   class="layui-input" id="userIdentity">
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -194,6 +201,8 @@
                         $("#username").val(data.username)
                         $("#realname").val(data.realname)
                         $("#telephone").val(data.telephone)
+                        $("#userIdentity").val(data.userIdentity)
+
                         console.log("dfsdfd"+sessionStorage.getItem("username"))
                         $("#span01").html(sessionStorage.getItem("username")+'&nbsp')
 
@@ -219,7 +228,7 @@
                     cache: "false",  //是否缓存  false关闭缓存  目的是避免部分浏览器缓存加载出错(IE))
                     datatype: "json",  //返回类型html, text , json
                     contentType: "application/json;charset=utf-8",
-                    data: JSON.stringify({id:sessionStorage.getItem("userId"),realname: $("#realname").val(), telephone: $("#telephone").val()}),//经过序列化的对象,
+                    data: JSON.stringify({id:sessionStorage.getItem("userId"),realname: $("#realname").val(), telephone: $("#telephone").val(),userIdentity:$("#userIdentity").val()}),//经过序列化的对象,
                     success: function (data) {
                         console.log("成功:" + JSON.stringify(data));
                         alert(data.msg);
@@ -234,6 +243,12 @@
                 });
             })
 
+            // 回车事件
+            $(document).keydown(function(event){
+                if(event.keyCode==13){
+                    $("#sub").click();
+                }
+            });
 
         </script>
     </div>

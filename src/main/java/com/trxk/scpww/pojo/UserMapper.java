@@ -49,7 +49,17 @@ public interface UserMapper {
      */
     int updateByPrimaryKey(User record);
 
+    /**
+     *根据用户名和密码查找用户
+     * @param record
+     * @return
+     */
     User selectUserByNameAndPassword(User record);
 
+    /**
+     * 根据用户名查找用户
+     * @param username
+     * @return
+     */
     User selectByUserName(String username);
 }
