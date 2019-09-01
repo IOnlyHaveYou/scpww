@@ -24,6 +24,9 @@ public class JiFenHuoQuController
     JiFenHuoQuService jiFenHuoQuService;
     @RequestMapping(value = "/chaXunJiFenHuoQu", method = RequestMethod.POST)
     @ResponseBody
+    /**
+     * 传入前端传过来的需要分多少页,当前是第几页
+     */
     public Map<String,Object> byUserIdChaXun(@RequestBody(required = false) FenYe fenYe, Model model){
         return jiFenHuoQuService.byUserIdChaXun(fenYe,model);
     }

@@ -50,6 +50,7 @@ public class JiFenXiaoFeiService
         model.addAttribute("pageInfo",page);
         if(list != null){
             map.put("PageInfo",page);
+        //这个位置传入的必须是list或者类型原型 不能是字符串 所有创建的map对象为Map<String,Object>
             map.put("page",list);
             map.put("code","200");
             map.put("msg","查询成功");

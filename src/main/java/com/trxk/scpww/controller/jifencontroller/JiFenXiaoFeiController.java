@@ -35,6 +35,10 @@ public class JiFenXiaoFeiController
     @RequestMapping(value = "/chaJiFenXiaoFei", method = RequestMethod.POST)
 
     @ResponseBody
+
+    /**
+     * 传入前端传过来的需要分多少页,当前是第几页
+     */
     public Map<String,Object> byUserIdChaXun(@RequestBody(required = false)FenYe fenYe, Model model){
 
         System.out.println(fenYe);
