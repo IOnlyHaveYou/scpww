@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人信息</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/user/xinxi.css">
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/user/xinxi.js"></script>
+
+</head>
+<body>
+
+
+        <table>
+            <caption ><h3>个人信息</h3></caption>
+            <thead>
+            <tr>
+                <td class="col-md-2">用户名</td>
+                <td class="col-md-1">联系电话</td>
+                <td class="col-md-2">真实姓名</td>
+                <td class="col-md-1">身份证号码</td>
+                <td class="col-md-1">操作</td>
+            </tr>
+            </thead>
+            <tbody id="userTable">
+            </tbody>
+        </table>
+
+
+
+
+<div>
+    <a href="/user/passenger.html">常用乘车人</a>
+
+</div>
+
+<!--        <div>-->
+<!--            <a href="/user/gaimima.html">修改密码</a>-->
+<!--        </div>-->
+        <script>
+
+
+xinxi(sessionStorage.getItem(id));
+
+
+function xinxi(id) {
+    $.ajax({
+        url: "/selectByPrimaryKey",   //请求路径
+        type: "POST",  //请求方式
+        asyns: true,   //true :异步 flase:同步   默认true
+        cache: "false",  //是否缓存  false关闭缓存  目的是避免部分浏览器缓存加载出错(IE))
+        datatype: "json",  //返回类型html, text , json
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({id:id}),//经过序列化的对象,
+        success: function (data) {
+            console.log(data);
+            if (data.code == 200){
+                alert("成功")
+                let user = data.user;
+                console.log(user);
+                let outHtml = "";
+                for ( i in user){
+
+                    outHtml += "<tr>"+
+                        "<td>" + user[i].username + "</td>" +
+                        "<td>" + user[i].telephone + "</td>" +
+                        "<td>" + user[i].realname + "</td>" +
+                        "<td>" + user[i].user_identity + "</td>" +
+                        "<td><button id=\"gengxin\" onclick='ffff'>"+"编辑"+"</button></td>\n" +
+                        "</tr>";
+                    //id, username, password, telephone, realname, user_identity
+                    $("#userTable").html(outHtml);
+                }
+            }
+        },
+        error: function (data) {
+            //1响应失败 2 服务器中断 3网络中断 4 返回的不是json数据,无法解析
+            console.log("失败:");
+            alert("失败");
+        }
+    });
+
+
+    function ffff() {
+
+
+        layui.use('layer', function () {
+            var id = $(this).parents("tr")
+            var id1 = $(this).parents("tr").eq(0).children().eq(2).text();
+            var id2 = $(this).parents("tr").eq(0).children().eq(3).text();
+            var id3 = $(this).parents("tr").eq(0).children().eq(4).text();
+            console.log(id)
+            console.log(id1)
+            console.log(id2)
+            console.log(id3)
+            var layer = layui.layer;
+            layer.open({
+                type: 1,
+                area: ['600px', '360px'],
+                shadeClose: true, //点击遮罩关闭
+                content: "<div style=\"padding: 20px\"> \n" +
+                    "    <input type=\"text\" id='username' placeholder='请输入用户名'/>\n" +
+                    "    <input type=\"text\" id='telephone' placeholder='请输入联系电话'/>\n" +
+                    "    <input type=\"text\" id='realname' placeholder='请输入身份证号码'/>\n" +
+                    "    <input type=\"text\" id='user_identity' placeholder='请输入身份证号码'/>\n" +
+                    "    <input type=\"button\" onclick='fffff()' value=\"提交\"/>\n" +
+                    "</div>"
+            });
+        });
+
+    }
+
+    function fffff() {
+        var myjson = {
+            id:"900e4d2d2d6a4d7ba39c52762ced922f",username:"think",telephone:"123",realname:"小南",
+            userIdentity:"21312312312323"
+        }
+
+        $.ajax({
+            url: "/updateXinXi",   // 请求路径  url-pattern  基于当前工程的绝对路径
+            type: "post",            // 请求的方式，不区分大小写
+            async: true,             // 是否异步，true是默认值，false为同步请求
+            cache: false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+            datatype: "json",        // 返回类型，text文本、html页面、json数据
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify(myjson),
+            success: function (data) {
+                console.log(data)
+                if (data.code == 200) {
+                    alert(data.msg);
+                    displayPassenger();
+                } else {
+                    alert(data.msg);
+                }
+            },
+            error: function (data) {
+                alert(data.msg)
+                console.log("错误:" + JSON.stringify(data));
+            }
+        });
+    }
+}
+
+
+// <select id="selectByPrimaryKey01" parameterType="java.lang.String" resultMap="BaseResultMap">
+//         select
+//     username, telephone, realname, user_identity
+//     from user
+//     where id = #{id,jdbcType=VARCHAR}
+// </select>
+
+
+        </script>
+</body>
+</html>

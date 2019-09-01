@@ -1,15 +1,11 @@
 package com.trxk.scpww.service.jifenservice;
 
 import com.trxk.scpww.pojo.*;
-import com.trxk.scpww.utill.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service

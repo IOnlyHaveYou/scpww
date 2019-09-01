@@ -50,14 +50,14 @@
             <div class="layui-form-item">
                 <label class="layui-form-label"></label>
                 <div class="layui-input-block">
-                    <input type="text" name="username" lay-verify="title" autocomplete="off" placeholder="出发城市"
-                           class="layui-input">
+                    <input type="text" name="starting" lay-verify="title" autocomplete="off" placeholder="出发城市"
+                           class="layui-input" id="starting">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label"></label>
                 <div class="layui-input-block">
-                    <input type="text" name="password" placeholder="到达城市" autocomplete="off" class="layui-input">
+                    <input type="text" name="end" placeholder="到达城市" autocomplete="off" class="layui-input" id="end">
                 </div>
             </div>
 
@@ -71,7 +71,7 @@
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="demo1">立即搜索</button>
+                    <button class="layui-btn" lay-submit="" lay-filter="demo1" id="but" type="button">立即搜索</button>
                 </div>
             </div>
         </form>
@@ -98,12 +98,13 @@
 
 </div>
 <script src="/layui/layui.js"></script>
+<script src="/js/train/searchtrain.js"></script>
 <script>
-    //JavaScript代码区域
+    //);JavaScript代码区域
     layui.use('element', function () {
         var element = layui.element;
 
-    });
+    })
 </script>
 
 <!--<script src="/js/user/index.js"></script>-->
@@ -249,7 +250,24 @@
         var carousel = layui.carousel
             , form = layui.form;
 
+        //常规轮播
+        carousel.render({
+            elem: '#test1'
+            , arrow: 'always'
+        });
 
+        //改变下时间间隔、动画类型、高度
+        carousel.render({
+            elem: '#test2'
+            , interval: 1000
+            , anim: 'fade'
+            , height: '120px'
+        });
+
+        //设定各种参数
+        var ins3 = carousel.render({
+            elem: '#test3'
+        });
         //图片轮播
         carousel.render({
             elem: '#test10'

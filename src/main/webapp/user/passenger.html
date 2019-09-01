@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/layui/css/layui.css">
     <script src="/js/jquery-3.3.1.min.js"></script>
     <script src="/layui/layui.js"></script>
+
     <script>
         var currentUrl=window.location.href
         sessionStorage.setItem("currentUrl",currentUrl)
@@ -76,17 +77,26 @@
                 </div>
             </div>
             <hr class="layui-bg-gray">
-            <div class="layui-row">
+            <div class="layui-row"class="layui-container" id="d1">
 
-<!--                表格内容-->
 
+
+                <table class="layui-table" id="tb">
+                    常用乘车人 &nbsp;&nbsp; <button class="layui-btn" id = "addbutt">添加</button>
+                    <thead id="passengerth">
+
+                    </thead>
+                    <tbody id="passengertb">
+
+                    </tbody>
+                </table>
 
             </div>
-
 
         </div>
 
     </div>
+
 
 
     <!--footer-->
@@ -138,7 +148,7 @@
                 });
             });
         </script>
-
+        <script src="/js/user/passenger.js"></script>
 
         <script>
 

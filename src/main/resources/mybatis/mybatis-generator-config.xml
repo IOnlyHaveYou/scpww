@@ -5,7 +5,7 @@
 <generatorConfiguration>
 
     <!-- 本地数据库驱动程序jar包的全路径 -->
-    <classPathEntry location="C:\Users\li\.m2\repository\mysql\mysql-connector-java\5.1.46\mysql-connector-java-5.1.46.jar"/>
+    <classPathEntry location="D:\maven\my_local_repository\mysql\mysql-connector-java\5.1.6\mysql-connector-java-5.1.6.jar"/>
 
     <!-- 指定mybatis版本 -->
     <context id="context" targetRuntime="MyBatis3">
@@ -16,9 +16,9 @@
 
         <!-- 数据库的相关配置 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://172.16.1.1:3306/scpww"
-                        userId="root"
-                        password="root"/>
+                        connectionURL="jdbc:mysql://t.charlie166.xyz:15862/scpww?useUnicode=true&amp;characterEncoding=utf8"
+                        userId="huang"
+                        password="huang@MySQL123"/>
 
         <!--指定生成的类型为java类型，避免数据库中number等类型字段 -->
         <javaTypeResolver>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script>
+
+        (function ($) {
+            $.getUrlParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]); return null;
+            }
+        })(jQuery);
+        var name = $.getUrlParam("end");
+        alert(name)
+
+    </script>
+</head>
+<body>
+<button id="but">点击</button>
+</body>
+<script>
+    $("#but").click(function () {
+        alert(name)
+    })
+</script>
+</html>

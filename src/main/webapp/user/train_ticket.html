@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查询余票</title>
+    <link rel="shortcut icon" href="#" />
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <script src="/layui/layui.js" charset="utf-8"></script>
+    <script src="http://code.jquery.com/jquery-3.4.1.js"></script>
+    <script>
+        $(function () {
+            var userId = sessionStorage.getItem("userId");
+            if (userId != null) {
+                $("#ul01").html("  <li class=\"layui-nav-item\">\n" +
+                    "                    <img src=\"http://t.cn/RCzsdCq\" class=\"layui-nav-img\">\n" +
+                    "                    " + sessionStorage.getItem("username") + "\n" +
+                    "                <dl class=\"layui-nav-child\">\n" +
+                    "                    <dd><a href=\"\" id='a01'>基本资料</a></dd>\n" +
+                    "                    <dd><a href=\"\" id='a02'>常用乘车人管理</a></dd>\n" +
+                    "                    <dd><a href=\"\" id='a03'>退出登录</a></dd>\n" +
+                    "                </dl>\n" +
+                    "            </li>\n" + "<li class=\"layui-nav-item\">&nbsp &nbsp</a></li>"
+                )
+            }
+
+            $("#a01").click(function () {
+                $("#a01").attr("href","/user/userdetail.html")
+            })
+
+            $("#a02").click(function () {
+
+            })
+
+            $("#a03").click(function () {
+                sessionStorage.removeItem("userId");
+                window.location.href="/user/index.html"
+            })
+        })
+    </script>
+    <script>
+        function ff(dataa ) {
+
+            $.ajax({
+
+                type: "post",
+                url: "/chePiaoChaXue",
+                async: true,
+                cache: false,
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(dataa),
+                success: function (data) {
+                    console.log(data)
+                    var tb = document.getElementById("tb");
+                    if (tb != null) {
+                        tb.remove();
+                    }
+
+
+                    var mytr = "<table class=\"layui-table\" id=\"tb\"><tr id=\"tr1\">";
+                    mytr += "<th>" + "车次" + "</th>";
+                    mytr += "<th>" + "发站/到站" + "</th>";
+                    mytr += "<th>" + "发时" + "</th>";
+                    mytr += "<th>" + "到时" + "</th>";
+                    mytr += "<th>" + "历时" + "</th>";
+                    mytr += "<th>" + "天数" + "</th>";
+                    mytr += "<th>" + "参考票价" + "</th>";
+                    mytr += "<th>" + "参考余票" + "</th>";
+                    mytr += "<th>" + "操作" + "</th>";
+                    mytr += "</tr></table>";
+                    $("#d1").append(mytr);
+                    var tb = document.getElementById("tb");
+
+
+                    var map = JSON.parse(data[0]).data;
+                    // console.log(JSON.stringify(map))
+                    for (var i = 0; i < map.length; i++) {
+                        if (map[i].trainGrade == "高速动车") {
+                            var business = map[i]["business"];
+                            var one = map[i]["one-seat"];
+                            var two = map[i]["two-seat"];
+                            var wu = map[i]["none-seat"];
+                            //var te = map[i]["best-seat"];
+                            // var business = map[i]["business"];
+                            // var one = map[i]["one-seat"];
+                            // var two = map[i]["two-seat"];
+                            // var wu = map[i]["none-seat"];
+                            var row = tb.insertRow(tb.rows.length);
+                            var c1 = row.insertCell(0);
+                            c1.innerHTML = map[i].trainCode + "</br>" + "高速动车";
+                            var c2 = row.insertCell(1);
+
+                            c2.innerHTML = "始：" + map[i].startStation + "</br>" + "终：" + map[i].arriveStation;
+                            var c3 = row.insertCell(2);
+                            c3.innerHTML = map[i].startTime;
+                            var c4 = row.insertCell(3);
+                            c4.innerHTML = map[i].endTime;
+                            var c5 = row.insertCell(4);
+                            c5.innerHTML = map[i].takeTime;
+                            var c6 = row.insertCell(5);
+                            c6.innerHTML = map[i].day_diff;
+                            var c7 = row.insertCell(6);
+                            if (map[i]["one-seat-prc"] != "--") {
+                                if (map[i]["business-prc"] != "--") {
+                                    if (map[i]["none-seat-prc"] != "--") {
+                                        var businessp = "商务座：" + map[i]["business-prc"];
+                                        var onep = "一等座：" + map[i]["one-seat-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        var wup = "无座：&nbsp; " + map[i]["none-seat-prc"];
+                                        c7.innerHTML = businessp + "</br>" + onep + "</br>" + twop + "</br>" + wup;
+                                    } else {
+                                        var businessp = "商务座：" + map[i]["business-prc"];
+                                        var onep = "一等座：" + map[i]["one-seat-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        c7.innerHTML = businessp + "</br>" + onep + "</br>" + twop;
+                                    }
+
+                                } else {
+                                    if (map[i]["none-seat-prc"] != "--") {
+                                        var onep = "一等座：" + map[i]["one-seat-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        var wup = "无座： " + map[i]["none-seat-prc"];
+                                        c7.innerHTML = onep + "</br>" + twop + "</br>" + wup;
+                                    } else {
+
+                                        var onep = "一等座：" + map[i]["one-seat-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        c7.innerHTML = onep + "</br>" + twop;
+                                    }
+
+                                }
+                            } else {
+                                if (map[i]["business-prc"] != "--") {
+                                    if (map[i]["none-seat-prc"] != "--") {
+                                        var businessp = "商务座：" + map[i]["business-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        var wup = "无座：&nbsp; " + map[i]["none-seat-prc"];
+                                        c7.innerHTML = businessp + "</br>" + onep + "</br>" + twop + "</br>" + wup;
+                                    } else {
+                                        var businessp = "商务座：" + map[i]["business-prc"];
+
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        c7.innerHTML = businessp + "</br>" + onep + "</br>" + twop;
+                                    }
+
+                                } else {
+                                    if (map[i]["none-seat-prc"] != "--") {
+
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        var wup = "无座： " + map[i]["none-seat-prc"];
+                                        c7.innerHTML = onep + "</br>" + twop + "</br>" + wup;
+                                    } else {
+
+
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        c7.innerHTML = onep + "</br>" + twop;
+                                    }
+
+                                }
+
+                            }
+                            var c8 = row.insertCell(7);
+                            if (wu != "--") {
+                                if (business == "--") {
+                                    if (one != "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座： 无";
+                                    } else if (one != "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座： 无";
+                                    } else if (one == "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座： 无";
+                                    } else if (one != "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座： " + wu;
+                                    } else if (one != "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座： 无";
+                                    }
+                                } else if (business != "0" && business != "--") {
+                                    if (one != "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座： " + wu;
+                                    } else if (one != "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座： 无";
+                                    } else if (one != "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座： 无";
+                                    } else if (one == "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座： 无";
+                                    } else if (one == "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座： " + wu;
+                                    } else if (one != "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座： 无";
+                                    }
+                                } else {
+                                    if (one != "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座： " + wu;
+                                    } else if (one != "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    } else if (one != "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座： " + wu;
+                                    } else if (one != "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座： 无";
+                                    }
+                                }
+                            } else {
+                                if (business != "0" && business != "--") {
+                                    if (one != "0" && two != "0") {
+
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two;
+                                    } else if (one != "0" && two == "0") {
+
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：无";
+                                    } else if (one == "0" && two != "0") {
+
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：" + two;
+                                    } else if (one == "0" && two == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：  无";
+                                    }
+
+                                } else {
+
+                                    if (one != "0" && two != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two;
+                                    } else if (one != "0" && two == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：无";
+                                    } else if (one == "0" && two != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：" + two;
+                                    } else if (one == "0" && two == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：无";
+                                    }
+                                }
+
+                            }
+                            var c9 = row.insertCell(8);
+                            c9.innerHTML = "<button class=\"layui-btn\" id = \"butt\">预定</button>";
+                        }
+                        if (map[i].trainGrade == "城际高速") {
+                            var business = map[i]["business"];
+                            var one = map[i]["one-seat"];
+                            var two = map[i]["two-seat"];
+                            var wu = map[i]["none-seat"];
+                            //var te = map[i]["best-seat"];
+                            // var business = map[i]["business"];
+                            // var one = map[i]["one-seat"];
+                            // var two = map[i]["two-seat"];
+                            // var wu = map[i]["none-seat"];
+                            var row = tb.insertRow(tb.rows.length);
+                            var c1 = row.insertCell(0);
+                            c1.innerHTML = map[i].trainCode + "</br>" + "城际高速";
+                            var c2 = row.insertCell(1);
+
+                            c2.innerHTML = "始：" + map[i].startStation + "</br>" + "终：" + map[i].arriveStation;
+                            var c3 = row.insertCell(2);
+                            c3.innerHTML = map[i].startTime;
+                            var c4 = row.insertCell(3);
+                            c4.innerHTML = map[i].endTime;
+                            var c5 = row.insertCell(4);
+                            c5.innerHTML = map[i].takeTime;
+                            var c6 = row.insertCell(5);
+                            c6.innerHTML = map[i].day_diff;
+                            var c7 = row.insertCell(6);
+                            if (map[i]["one-seat-prc"] != "--") {
+                                if (map[i]["business-prc"] != "--") {
+                                    if (map[i]["none-seat-prc"] != "--") {
+                                        var businessp = "商务座：" + map[i]["business-prc"];
+                                        var onep = "一等座：" + map[i]["one-seat-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        var wup = "无座：&nbsp; " + map[i]["none-seat-prc"];
+                                        c7.innerHTML = businessp + "</br>" + onep + "</br>" + twop + "</br>" + wup;
+                                    } else {
+                                        var businessp = "商务座：" + map[i]["business-prc"];
+                                        var onep = "一等座：" + map[i]["one-seat-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        c7.innerHTML = businessp + "</br>" + onep + "</br>" + twop;
+                                    }
+
+                                } else {
+                                    if (map[i]["none-seat-prc"] != "--") {
+                                        var onep = "一等座：" + map[i]["one-seat-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        var wup = "无座： " + map[i]["none-seat-prc"];
+                                        c7.innerHTML = onep + "</br>" + twop + "</br>" + wup;
+                                    } else {
+
+                                        var onep = "一等座：" + map[i]["one-seat-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        c7.innerHTML = onep + "</br>" + twop;
+                                    }
+
+                                }
+                            } else {
+                                if (map[i]["business-prc"] != "--") {
+                                    if (map[i]["none-seat-prc"] != "--") {
+                                        var businessp = "商务座：" + map[i]["business-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        var wup = "无座：&nbsp; " + map[i]["none-seat-prc"];
+                                        c7.innerHTML = businessp + "</br>" + onep + "</br>" + twop + "</br>" + wup;
+                                    } else {
+                                        var businessp = "商务座：" + map[i]["business-prc"];
+
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        c7.innerHTML = businessp + "</br>" + onep + "</br>" + twop;
+                                    }
+
+                                } else {
+                                    if (map[i]["none-seat-prc"] != "--") {
+
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        var wup = "无座： " + map[i]["none-seat-prc"];
+                                        c7.innerHTML = onep + "</br>" + twop + "</br>" + wup;
+                                    } else {
+
+
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        c7.innerHTML = onep + "</br>" + twop;
+                                    }
+
+                                }
+
+                            }
+                            var c8 = row.insertCell(7);
+                            if (wu != "--") {
+                                if (business == "--") {
+                                    if (one != "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座： 无";
+                                    } else if (one != "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座： 无";
+                                    } else if (one == "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座： 无";
+                                    } else if (one != "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座： " + wu;
+                                    } else if (one != "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座： 无";
+                                    }
+                                } else if (business != "0" && business != "--") {
+                                    if (one != "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座： " + wu;
+                                    } else if (one != "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座： 无";
+                                    } else if (one != "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座： 无";
+                                    } else if (one == "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座： 无";
+                                    } else if (one == "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座： " + wu;
+                                    } else if (one != "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    }
+                                } else {
+                                    if (one != "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座： " + wu;
+                                    } else if (one != "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    } else if (one != "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座： 无";
+                                    } else if (one != "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座： " + wu;
+                                    } else if (one == "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座： 无";
+                                    }
+                                }
+                            } else {
+                                if (business != "0" && business != "--") {
+                                    if (one != "0" && two != "0") {
+
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座： " + two;
+                                    } else if (one != "0" && two == "0") {
+
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座： 无";
+                                    } else if (one == "0" && two != "0") {
+
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座： " + two;
+                                    } else if (one == "0" && two == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：无";
+                                    }
+
+                                } else {
+
+                                    if (one != "0" && two != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two;
+                                    } else if (one != "0" && two == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：无";
+                                    } else if (one == "0" && two != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：" + two;
+                                    } else if (one == "0" && two == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：无";
+                                    }
+                                }
+
+                            }
+                            var c9 = row.insertCell(8);
+                            c9.innerHTML = "<button class=\"layui-btn\" id = \"butt\">预定</button>";
+                        }
+
+                        if (map[i].trainGrade == "动车组") {
+                            var business = map[i]["business"];
+                            var one = map[i]["one-seat"];
+                            var two = map[i]["two-seat"];
+                            var wu = map[i]["none-seat"];
+                            var row = tb.insertRow(tb.rows.length);
+                            var c1 = row.insertCell(0);
+                            c1.innerHTML = map[i].trainCode + "</br>" + "动车组";
+                            var c2 = row.insertCell(1);
+                            c2.innerHTML = "始：" + map[i].startStation + "</br>" + "终：" + map[i].arriveStation;
+                            var c3 = row.insertCell(2);
+                            c3.innerHTML = map[i].startTime;
+                            var c4 = row.insertCell(3);
+                            c4.innerHTML = map[i].endTime;
+                            var c5 = row.insertCell(4);
+                            c5.innerHTML = map[i].takeTime;
+                            var c6 = row.insertCell(5);
+                            c6.innerHTML = map[i].day_diff;
+                            var c7 = row.insertCell(6);
+                            if (map[i]["one-seat-prc"] != "--") {
+                                if (map[i]["business-prc"] != "--") {
+                                    if (map[i]["none-seat-prc"] != "--") {
+                                        var businessp = "商务座：" + map[i]["business-prc"];
+                                        var onep = "一等座：" + map[i]["one-seat-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        var wup = "无座：&nbsp; " + map[i]["none-seat-prc"];
+                                        c7.innerHTML = businessp + "</br>" + onep + "</br>" + twop + "</br>" + wup;
+                                    } else {
+                                        var businessp = "商务座：" + map[i]["business-prc"];
+                                        var onep = "一等座：" + map[i]["one-seat-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        c7.innerHTML = businessp + "</br>" + onep + "</br>" + twop;
+                                    }
+
+                                } else {
+                                    if (map[i]["none-seat-prc"] != "--") {
+                                        var onep = "一等座：" + map[i]["one-seat-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        var wup = "无座： " + map[i]["none-seat-prc"];
+                                        c7.innerHTML = onep + "</br>" + twop + "</br>" + wup;
+                                    } else {
+
+                                        var onep = "一等座：" + map[i]["one-seat-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        c7.innerHTML = onep + "</br>" + twop;
+                                    }
+
+                                }
+                            } else {
+                                if (map[i]["business-prc"] != "--") {
+                                    if (map[i]["none-seat-prc"] != "--") {
+                                        var businessp = "商务座：" + map[i]["business-prc"];
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        var wup = "无座：&nbsp; " + map[i]["none-seat-prc"];
+                                        c7.innerHTML = businessp + "</br>" + onep + "</br>" + twop + "</br>" + wup;
+                                    } else {
+                                        var businessp = "商务座：" + map[i]["business-prc"];
+
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        c7.innerHTML = businessp + "</br>" + onep + "</br>" + twop;
+                                    }
+
+                                } else {
+                                    if (map[i]["none-seat-prc"] != "--") {
+
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        var wup = "无座： " + map[i]["none-seat-prc"];
+                                        c7.innerHTML = onep + "</br>" + twop + "</br>" + wup;
+                                    } else {
+
+
+                                        var twop = "二等座：" + map[i]["two-seat-prc"];
+                                        c7.innerHTML = onep + "</br>" + twop;
+                                    }
+
+                                }
+
+                            }
+                            var c8 = row.insertCell(7);
+                            if (wu != "--") {
+                                if (business == "--") {
+                                    if (one != "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座：无";
+                                    } else if (one != "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座：无";
+                                    } else if (one == "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座：无";
+                                    } else if (one != "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座：" + wu;
+                                    } else if (one != "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座：" + wu;
+                                    } else if (one == "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座：" + wu;
+                                    } else if (one == "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座：" + wu;
+                                    } else if (one == "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座：无";
+                                    }
+                                } else if (business != "0" && business != "--") {
+                                    if (one != "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座：" + wu;
+                                    } else if (one != "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座：无";
+                                    } else if (one != "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座：无";
+                                    } else if (one == "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座：" + wu;
+                                    } else if (one == "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座：无";
+                                    } else if (one == "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座：" + wu;
+                                    } else if (one != "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座：" + wu;
+                                    } else if (one == "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座：" + wu;
+                                    }
+                                } else {
+                                    if (one != "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座：" + wu;
+                                    } else if (one != "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座：" + wu;
+                                    } else if (one != "0" && two != "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two + "</br>" + "无座：无";
+                                    } else if (one != "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：无" + "</br>" + "无座：" + wu;
+                                    } else if (one == "0" && two != "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：" + two + "</br>" + "无座：" + wu;
+                                    } else if (one == "0" && two == "0" && wu != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座：" + wu;
+                                    } else if (one == "0" && two == "0" && wu == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：无" + "</br>" + "无座：无";
+                                    }
+                                }
+                            } else {
+                                if (business != "0" && business != "--") {
+                                    if (one != "0" && two != "0") {
+
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two;
+                                    } else if (one != "0" && two == "0") {
+
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：" + one + "</br>" + "二等座：无";
+                                    } else if (one == "0" && two != "0") {
+
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：" + two;
+                                    } else if (one == "0" && two == "0") {
+                                        c8.innerHTML = "商务座：" + business + "</br>" + "一等座：无" + "</br>" + "二等座：  无";
+                                    }
+
+                                } else {
+
+                                    if (one != "0" && two != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：" + two;
+                                    } else if (one != "0" && two == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：" + one + "</br>" + "二等座：无";
+                                    } else if (one == "0" && two != "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：" + two;
+                                    } else if (one == "0" && two == "0") {
+                                        c8.innerHTML = "商务座：无" + "</br>" + "一等座：无" + "</br>" + "二等座：无";
+                                    }
+                                }
+
+                            }
+                            var c9 = row.insertCell(8);
+                            c9.innerHTML = "<button class=\"layui-btn\" id = \"butt\">预定</button>";
+                        }
+                        if (map[i].trainGrade == "空调特快") {
+                            var hardsleeper = map[i]["hard-sleeper"];//硬卧
+                            var hardseat = map[i]["hard-seat"];//硬座
+                            var noneseat = map[i]["none-seat"];//无座
+                            var softsleeper = map[i]["soft-sleeper"];//软卧
+                            var row = tb.insertRow(tb.rows.length);
+                            var c1 = row.insertCell(0);
+                            c1.innerHTML = map[i].trainCode + "</br>" + map[i].trainGrade;
+                            var c2 = row.insertCell(1);
+
+                            c2.innerHTML = "始：" + map[i].startStation + "</br>" + "终：" + map[i].arriveStation;
+                            var c3 = row.insertCell(2);
+                            c3.innerHTML = map[i].startTime;
+                            var c4 = row.insertCell(3);
+                            c4.innerHTML = map[i].endTime;
+                            var c5 = row.insertCell(4);
+                            c5.innerHTML = map[i].takeTime;
+                            var c6 = row.insertCell(5);
+                            c6.innerHTML = map[i].day_diff;
+                            var c7 = row.insertCell(6);
+                            var softsleeperp = "软卧：" + map[i]["soft-sleeper-prc"];
+                            var hardsleeperp = "硬卧：" + map[i]["hard-sleeper-prc"];
+                            var hardseatp = "硬座：" + map[i]["hard-seat-prc"];
+                            var noneseatp = "无座：" + map[i]["none-seat-prc"];
+                            c7.innerHTML = hardseatp + "</br>" + hardsleeperp + "</br>" + softsleeperp + "</br>" + noneseatp;
+                            var c8 = row.insertCell(7);
+                            if (softsleeper != "--") {
+                                if (noneseat == "--") {
+                                    if (hardseat != "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：无";
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：无";
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：无";
+                                    } else if (hardseat != "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper;
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper;
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper;
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper;
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：无";
+                                    }
+                                } else if (noneseat != "0" && noneseat != "--") {
+                                    if (hardseat != "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧： 无" + "</br>" + "软卧：无" + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat != "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：无" + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：无" + "</br>" + "无座：" + noneseat;
+                                    }
+                                } else {
+                                    if (hardseat != "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat != "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：无" + "</br>" + "无座：无";
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：无" + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：无" + "</br>" + "无座：无";
+                                    }
+                                }
+                            } else {
+                                if (noneseat != "0" && noneseat != "--") {
+                                    if (hardseat != "0" && hardsleeper != "0") {
+
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat != "0" && hardsleeper == "0") {
+
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper != "0") {
+
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "无座：" + noneseat;
+                                    }
+
+                                } else {
+
+                                    if (hardseat != "0" && hardsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + one + "</br>" + "无座：无";
+                                    } else if (hardseat != "0" && hardsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "无座：无";
+                                    }
+                                }
+
+                            }
+                            var c9 = row.insertCell(8);
+                            c9.innerHTML = "<button class=\"layui-btn\" id = \"butt\">预定</button>";
+                        }
+                        if (map[i].trainGrade == "直达特快") {
+                            var hardsleeper = map[i]["hard-sleeper"];//硬卧
+                            var hardseat = map[i]["hard-seat"];//硬座
+                            var noneseat = map[i]["none-seat"];//无座
+                            var softsleeper = map[i]["soft-sleeper"];//软卧
+                            var row = tb.insertRow(tb.rows.length);
+                            var c1 = row.insertCell(0);
+                            c1.innerHTML = map[i].trainCode + "</br>" + map[i].trainGrade;
+                            var c2 = row.insertCell(1);
+
+                            c2.innerHTML = "始：" + map[i].startStation + "</br>" + "终：" + map[i].arriveStation;
+                            var c3 = row.insertCell(2);
+                            c3.innerHTML = map[i].startTime;
+                            var c4 = row.insertCell(3);
+                            c4.innerHTML = map[i].endTime;
+                            var c5 = row.insertCell(4);
+                            c5.innerHTML = map[i].takeTime;
+                            var c6 = row.insertCell(5);
+                            c6.innerHTML = map[i].day_diff;
+                            var c7 = row.insertCell(6);
+                            var softsleeperp = "软卧：" + map[i]["soft-sleeper-prc"];
+                            var hardsleeperp = "硬卧：" + map[i]["hard-sleeper-prc"];
+                            var hardseatp = "硬座：" + map[i]["hard-seat-prc"];
+                            var noneseatp = "无座：" + map[i]["none-seat-prc"];
+                            c7.innerHTML = hardseatp + "</br>" + hardsleeperp + "</br>" + softsleeperp + "</br>" + noneseatp;
+                            var c8 = row.insertCell(7);
+                            if (softsleeper != "--") {
+                                if (noneseat == "--") {
+                                    if (hardseat != "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：无";
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：无";
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：无";
+                                    } else if (hardseat != "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper;
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper;
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper;
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper;
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：无";
+                                    }
+                                } else if (noneseat != "0" && noneseat != "--") {
+                                    if (hardseat != "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧： 无" + "</br>" + "软卧：无" + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat != "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：无" + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：无" + "</br>" + "无座：" + noneseat;
+                                    }
+                                } else {
+                                    if (hardseat != "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat != "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：无" + "</br>" + "无座：无";
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：无" + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：无" + "</br>" + "无座：无";
+                                    }
+                                }
+                            } else {
+                                if (noneseat != "0" && noneseat != "--") {
+                                    if (hardseat != "0" && hardsleeper != "0") {
+
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat != "0" && hardsleeper == "0") {
+
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper != "0") {
+
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "无座：" + noneseat;
+                                    }
+
+                                } else {
+
+                                    if (hardseat != "0" && hardsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + one + "</br>" + "无座：无";
+                                    } else if (hardseat != "0" && hardsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "无座：无";
+                                    }
+                                }
+
+                            }
+                            var c9 = row.insertCell(8);
+                            c9.innerHTML = "<button class=\"layui-btn\" id = \"butt\">预定</button>";
+                        }
+                        if (map[i].trainGrade == "快速") {
+                            var hardsleeper = map[i]["hard-sleeper"];//硬卧
+                            var hardseat = map[i]["hard-seat"];//硬座
+                            var noneseat = map[i]["none-seat"];//无座
+                            var softsleeper = map[i]["soft-sleeper"];//软卧
+                            var row = tb.insertRow(tb.rows.length);
+                            var c1 = row.insertCell(0);
+                            c1.innerHTML = map[i].trainCode + "</br>" + map[i].trainGrade;
+                            var c2 = row.insertCell(1);
+
+                            c2.innerHTML = "始：" + map[i].startStation + "</br>" + "终：" + map[i].arriveStation;
+                            var c3 = row.insertCell(2);
+                            c3.innerHTML = map[i].startTime;
+                            var c4 = row.insertCell(3);
+                            c4.innerHTML = map[i].endTime;
+                            var c5 = row.insertCell(4);
+                            c5.innerHTML = map[i].takeTime;
+                            var c6 = row.insertCell(5);
+                            c6.innerHTML = map[i].day_diff;
+                            var c7 = row.insertCell(6);
+                            var softsleeperp = "软卧：" + map[i]["soft-sleeper-prc"];
+                            var hardsleeperp = "硬卧：" + map[i]["hard-sleeper-prc"];
+                            var hardseatp = "硬座：" + map[i]["hard-seat-prc"];
+                            var noneseatp = "无座：" + map[i]["none-seat-prc"];
+                            c7.innerHTML = hardseatp + "</br>" + hardsleeperp + "</br>" + softsleeperp + "</br>" + noneseatp;
+                            var c8 = row.insertCell(7);
+                            if (softsleeper != "--") {
+                                if (noneseat == "--") {
+                                    if (hardseat != "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：无";
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：无";
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：无";
+                                    } else if (hardseat != "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper;
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper;
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper;
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper;
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：无";
+                                    }
+                                } else if (noneseat != "0" && noneseat != "--") {
+                                    if (hardseat != "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧： 无" + "</br>" + "软卧：无" + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat != "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：无" + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：无" + "</br>" + "无座：" + noneseat;
+                                    }
+                                } else {
+                                    if (hardseat != "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat != "0" && hardsleeper != "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：无" + "</br>" + "无座：无";
+                                    } else if (hardseat != "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "软卧：无" + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper != "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：" + softsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper == "0" && softsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "软卧：无" + "</br>" + "无座：无";
+                                    }
+                                }
+                            } else {
+                                if (noneseat != "0" && noneseat != "--") {
+                                    if (hardseat != "0" && hardsleeper != "0") {
+
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：" + hardsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat != "0" && hardsleeper == "0") {
+
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper != "0") {
+
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "无座：" + noneseat;
+                                    } else if (hardseat == "0" && hardsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "无座：" + noneseat;
+                                    }
+
+                                } else {
+
+                                    if (hardseat != "0" && hardsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + one + "</br>" + "无座：无";
+                                    } else if (hardseat != "0" && hardsleeper == "0") {
+                                        c8.innerHTML = "硬座：" + hardseat + "</br>" + "硬卧：无" + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper != "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：" + hardsleeper + "</br>" + "无座：无";
+                                    } else if (hardseat == "0" && hardsleeper == "0") {
+                                        c8.innerHTML = "硬座：无" + "</br>" + "硬卧：无" + "</br>" + "无座：无";
+                                    }
+                                }
+
+                            }
+                            var c9 = row.insertCell(8);
+                            c9.innerHTML = "<button class=\"layui-btn\" id = \"butt\">预定</button>";
+                        }
+
+
+                    }
+
+                }
+            });
+
+        }
+        function GetQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if(r != null) return decodeURI(r[2]);
+            return null;
+        }
+        var starting =GetQueryString("starting") ;
+        var date = GetQueryString("time1");
+        var end = GetQueryString("end");
+        var dataa = {"startStation":starting ,"date":date,"arriveStation":end};
+        if(starting != null || date != null, end != null){
+            ff(dataa)
+
+        }
+    </script>
+
+    <script>
+        $(function () {
+            $("#sub").click(function(){
+
+                var starting = $("#starting").val();
+                var date = $("#test1").val();
+                var end = $("#end").val();
+                var dataa = {"startStation":starting ,"date":date,"arriveStation":end};
+                ff(dataa);
+
+            });
+
+        })
+
+    </script>
+</head>
+<div id="id" class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">四川票务网</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item"><a href="#">首页</a></li>
+                <li class="layui-nav-item"><a href="">购买车票</a></li>
+                <li class="layui-nav-item"><a href="">订单查询</a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">积分系统</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/jifen.html" id="jifen">我的积分</a></dd>
+                        <dd><a href="">积分活动</a></dd>
+                        <dd><a href="">积分说明</a></dd>
+                    </dl>
+                </li>
+            </ul>
+            <ul class="layui-nav layui-layout-right" id="ul01">
+                <li class="layui-nav-item">
+                    <a href="/user/reg.html">
+
+                        注册
+                    </a>
+
+                </li>
+                <li class="layui-nav-item"><a href="/user/login.html">登录</a></li>
+            </ul>
+        </div>
+    </div>
+    <form class="layui-form" id="form" >
+
+    <div class="layui-form-item" style="margin-top: 30px">
+
+        <div class="layui-input-block">
+            <input type="text" name="starting" placeholder="请输入始发站" autocomplete="off" class="layui-input" id="starting">
+        </div>
+    </div>
+    <div class="layui-form-item" style="margin-top: 30px">
+
+        <div class="layui-input-block">
+            <input type="text" name="end" placeholder="请输入终点站" autocomplete="off" class="layui-input"id="end">
+        </div>
+    </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-inline">
+                    <input class="layui-input" id="test1" type="text" placeholder="请输入日期">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item"   style="width: 216px; margin: 0;">
+        <input type="button"class="layui-btn" value="查询"  style="margin-left: 95px" id="sub" >
+    </div>
+
+        </form>
+
+</div>
+<div class="layui-container" id="d1">
+<table class="layui-table" id="tb">
+
+</table>
+</div>
+
+
+<script>
+    $("#starting").val(starting)
+    $("#end").val(end)
+    $("#test1").val(date)
+    //一般直接写在一个js文件中
+    layui.use(['layer', 'form'], function(){
+        const layer = layui.layer
+            , form = layui.form;
+
+
+    });
+
+    layui.use('laydate', function(){
+        const laydate = layui.laydate;
+
+        //常规用法
+        laydate.render({
+            elem: '#test1'
+        });
+
+        //国际版
+        laydate.render({
+            elem: '#test1-1'
+            ,lang: 'en'
+        });
+
+        //年选择器
+        laydate.render({
+            elem: '#test2'
+            ,type: 'year'
+        });
+
+        //年月选择器
+        laydate.render({
+            elem: '#test3'
+            ,type: 'month'
+        });
+
+        //时间选择器
+        laydate.render({
+            elem: '#test4'
+            ,type: 'time'
+        });
+
+        //日期时间选择器
+        laydate.render({
+            elem: '#test5'
+            ,type: 'datetime'
+        });
+
+        //日期范围
+        laydate.render({
+            elem: '#test6'
+            ,range: true
+        });
+
+        //年范围
+        laydate.render({
+            elem: '#test7'
+            ,type: 'year'
+            ,range: true
+        });
+
+        //年月范围
+        laydate.render({
+            elem: '#test8'
+            ,type: 'month'
+            ,range: true
+        });
+
+        //时间范围
+        laydate.render({
+            elem: '#test9'
+            ,type: 'time'
+            ,range: true
+        });
+
+        //日期时间范围
+        laydate.render({
+            elem: '#test10'
+            ,type: 'datetime'
+            ,range: true
+        });
+
+        //自定义格式
+        laydate.render({
+            elem: '#test11'
+            ,format: 'yyyy年MM月dd日'
+        });
+        laydate.render({
+            elem: '#test12'
+            ,format: 'dd/MM/yyyy'
+        });
+        laydate.render({
+            elem: '#test13'
+            ,format: 'yyyyMMdd'
+        });
+        laydate.render({
+            elem: '#test14'
+            ,type: 'time'
+            ,format: 'H点m分'
+        });
+        laydate.render({
+            elem: '#test15'
+            ,type: 'month'
+            ,range: '~'
+            ,format: 'yyyy-MM'
+        });
+        laydate.render({
+            elem: '#test16'
+            ,type: 'datetime'
+            ,range: '到'
+            ,format: 'yyyy年M月d日H时m分s秒'
+        });
+
+        //开启公历节日
+        laydate.render({
+            elem: '#test17'
+            ,calendar: true
+        });
+
+        //自定义重要日
+        laydate.render({
+            elem: '#test18'
+            ,mark: {
+                '0-10-14': '生日'
+                ,'0-12-31': '跨年' //每年的日期
+                ,'0-0-10': '工资' //每月某天
+                ,'0-0-15': '月中'
+                ,'2017-8-15': '' //如果为空字符，则默认显示数字+徽章
+                ,'2099-10-14': '呵呵'
+            }
+            ,done: function(value, date){
+                if(date.year === 2017 && date.month === 8 && date.date === 15){ //点击2017年8月15日，弹出提示语
+                    layer.msg('这一天是：中国人民抗日战争胜利72周年');
+                }
+            }
+        });
+
+        //限定可选日期
+        var ins22 = laydate.render({
+            elem: '#test-limit1'
+            ,min: '2016-10-14'
+            ,max: '2080-10-14'
+            ,ready: function(){
+                ins22.hint('日期可选值设定在 <br> 2016-10-14 到 2080-10-14');
+            }
+        });
+
+        //前后若干天可选，这里以7天为例
+        laydate.render({
+            elem: '#test-limit2'
+            ,min: -7
+            ,max: 7
+        });
+
+        //限定可选时间
+        laydate.render({
+            elem: '#test-limit3'
+            ,type: 'time'
+            ,min: '09:30:00'
+            ,max: '17:30:00'
+            ,btns: ['clear', 'confirm']
+        });
+
+        //同时绑定多个
+        lay('.test-item').each(function(){
+            laydate.render({
+                elem: this
+                ,trigger: 'click'
+            });
+        });
+
+        //初始赋值
+        laydate.render({
+            elem: '#test19'
+            ,value: '1989-10-14'
+            ,isInitValue: true
+        });
+
+        //选中后的回调
+        laydate.render({
+            elem: '#test20'
+            ,done: function(value, date){
+                layer.alert('你选择的日期是：' + value + '<br>获得的对象是' + JSON.stringify(date));
+            }
+        });
+
+        //日期切换的回调
+        laydate.render({
+            elem: '#test21'
+            ,change: function(value, date){
+                layer.msg('你选择的日期是：' + value + '<br><br>获得的对象是' + JSON.stringify(date));
+            }
+        });
+        //不出现底部栏
+        laydate.render({
+            elem: '#test22'
+            ,showBottom: false
+        });
+
+        //只出现确定按钮
+        laydate.render({
+            elem: '#test23'
+            ,btns: ['confirm']
+        });
+
+        //自定义事件
+        laydate.render({
+            elem: '#test24'
+            ,trigger: 'mousedown'
+        });
+
+        //点我触发
+        laydate.render({
+            elem: '#test25'
+            ,eventElem: '#test25-1'
+            ,trigger: 'click'
+        });
+
+        //双击我触发
+        lay('#test26-1').on('dblclick', function(){
+            laydate.render({
+                elem: '#test26'
+                ,show: true
+                ,closeStop: '#test26-1'
+            });
+        });
+
+        //日期只读
+        laydate.render({
+            elem: '#test27'
+            ,trigger: 'click'
+        });
+
+        //非input元素
+        laydate.render({
+            elem: '#test28'
+        });
+
+        //墨绿主题
+        laydate.render({
+            elem: '#test29'
+            ,theme: 'molv'
+        });
+
+        //自定义颜色
+        laydate.render({
+            elem: '#test30'
+            ,theme: '#393D49'
+        });
+
+        //格子主题
+        laydate.render({
+            elem: '#test31'
+            ,theme: 'grid'
+        });
+
+
+        //直接嵌套显示
+        laydate.render({
+            elem: '#test-n1'
+            ,position: 'static'
+        });
+        laydate.render({
+            elem: '#test-n2'
+            ,position: 'static'
+            ,lang: 'en'
+        });
+        laydate.render({
+            elem: '#test-n3'
+            ,type: 'month'
+            ,position: 'static'
+        });
+        laydate.render({
+            elem: '#test-n4'
+            ,type: 'time'
+            ,position: 'static'
+        });
+    });
+
+    </script>
+<script>
+    //);JavaScript代码区域
+    layui.use('element', function () {
+        var element = layui.element;
+
+    })
+</script>
+
+<!--<script src="/js/user/index.js"></script>-->
+
+<script>
+    $(function () {
+
+        $("#jifen").click(function () {
+            sessionStorage.setItem("userId", userId);
+            window.location.href = "/jifen.html";
+        })
+    })
+</script>
+
+<script>
+    layui.use(['carousel', 'form'], function () {
+        var carousel = layui.carousel
+            , form = layui.form;
+
+
+
+
+        //设定各种参数
+        var ins3 = carousel.render({
+            elem: '#test3'
+        });
+
+
+
+        var $ = layui.$, active = {
+            set: function (othis) {
+                var THIS = 'layui-bg-normal'
+                    , key = othis.data('key')
+                    , options = {};
+
+                othis.css('background-color', '#5FB878').siblings().removeAttr('style');
+                options[key] = othis.data('value');
+                ins3.reload(options);
+            }
+        };
+
+        //监听开关
+        form.on('switch(autoplay)', function () {
+            ins3.reload({
+                autoplay: this.checked
+            });
+        });
+
+        $('.demoSet').on('keyup', function () {
+            var value = this.value
+                , options = {};
+            if (!/^\d+$/.test(value)) return;
+
+            options[this.name] = value;
+            ins3.reload(options);
+        });
+
+        //其它示例
+        $('.demoTest .layui-btn').on('click', function () {
+            var othis = $(this), type = othis.data('type');
+            active[type] ? active[type].call(this, othis) : '';
+        });
+    });
+</script>
+
+
+</body>
+</html>
