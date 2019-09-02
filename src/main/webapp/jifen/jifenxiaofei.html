@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>基本资料页</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/layui/layui.js"></script>
+    <!--    控制跳转-->
+    <script>
+        sessionStorage.setItem("currentUrl",currentUrl)
+        if (sessionStorage.getItem("userId") == null) {
+            window.location.href="/user/login.html"
+        }
+    </script>
+    <script src="/js/jifen/jifen.js"></script>
+</head>
+<body>
+<!--导航条-->
+<div>
+    <ul class="layui-nav" lay-filter="">
+        <li class="layui-nav-item"><a href="/user/index.html">四川票务网</a></li>
+        <li class="layui-nav-item layui-this"><a href="">关于我们</a></li>
+        <li class="layui-nav-item"><a href="">帮助中心</a></li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">问题建议</a>
+
+        </li>
+        <!--        <li class="layui-nav-item"><a href="">社区</a></li>-->
+    </ul>
+    <ul class="layui-nav layui-layout-right" id="ul01">
+
+    </ul>
+</div>
+
+<hr class="layui-bg-gray">
+
+<div class="layui-container">
+
+    <div class="layui-row">
+        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">积分信息</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/jifen/jifen1.html">我的积分</a></dd>
+                        <dd><a href="" id="jifenxiaofei">积分消费详情</a></dd>
+                        <dd><a href="/jifen/jifenhuoqu.html">积分获取详情</a></dd>
+                    </dl>
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
+
+            <div class="layui-row">
+                <div class="layui-row" style="color: #1E9FFF;font-size: 24px">
+                    积分消费详情
+                </div>
+                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <img class="headImg" src="https://www.tz12306.com/static/byWyy/img/personal_ico_head.png"
+                         width="100px" height="100px" stfyle="float:left;">
+
+
+                </div>
+
+                <div class="layui-col-xs8 layui-col-sm8 layui-col-md8" style="height: 100px;line-height: 100px">
+                    <span id="span01" style="color: #eb7350;font-size: 20px"></span>您好，欢迎登录四川票务网个人中心
+                </div>
+            </div>
+            <hr class="layui-bg-gray">
+            <div class="layui-row">
+                <table class="layui-table" id="mytable">
+                    <colgroup>
+                        <col width="150">
+                        <col width="200">
+                        <col>
+                    </colgroup>
+                    <tr>
+                        <td>id</th>
+                        <td>消费积分数</th>
+                        <td>消费积分日期</th>
+                    </tr>
+                </table>
+                <!--</table>
+                <table id="mytable">
+                    <tr>
+                        <td>序号</td>
+                        <td>消费积分数</td>
+                        <td>消费积分日期</td>
+                    </tr>
+                </table>-->
+                <div>总共多少条:<span id="count"></span>条</div>
+                <div>总共多少页:<span id="allPage"></span>页</div>
+                <div>当前第几页:<span id="nowPage"></span>页</div>
+                <div>每页显示多少条:<input type="text" id="showCount" value="4">条
+                    <input type="submit" id="tijiao" value="确定"/>
+                </div>
+                <button onclick="ff('1')">首页</button>&nbsp;&nbsp;&nbsp;
+                <button onclick="ff('-1')">上一页</button>&nbsp;&nbsp;&nbsp;
+                <button onclick="ff('+1')">下一页</button>&nbsp;&nbsp;&nbsp;
+                <button onclick="ff('0')">末页</button>&nbsp;&nbsp;&nbsp;
+                <div id="onlyPage"></div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+        <!--导航条-->
+        <script>
+            //注意：导航 依赖 element 模块，否则无法进行功能性操作
+            layui.use('element', function () {
+                var element = layui.element;
+
+                //…
+            });
+        </script>
+        <!--        中间表单元素-->
+        <script>
+            //Demo
+            layui.use('form', function () {
+                var form = layui.form;
+
+                //监听提交
+                form.on('submit(formDemo)', function (data) {
+                    layer.msg(JSON.stringify(data.field));
+                    return false;
+                });
+            });
+        </script>
+
+
+        <script>
+
+            //创建一个时间对象
+            var newDate = new Date();
+
+            $(function () {
+
+                // 用户信息查询
+                $.ajax({
+                    url: "/userSelect",   //请求路径
+                    type: "POST",  //请求方式
+                    asyns: true,   //true :异步 flase:同步   默认true
+                    cache: "false",  //是否缓存  false关闭缓存  目的是避免部分浏览器缓存加载出错(IE))
+                    datatype: "json",  //返回类型html, text , json
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({userId: sessionStorage.getItem("userId")}),//经过序列化的对象,
+                    success: function (data) {
+                        console.log("成功:" + JSON.stringify(data));
+                        $("#username").val(data.username)
+                        $("#realname").val(data.realname)
+                        $("#telephone").val(data.telephone)
+                        $("#userIdentity").val(data.userIdentity)
+
+                        console.log("dfsdfd"+sessionStorage.getItem("username"))
+                        $("#span01").html(sessionStorage.getItem("username")+'&nbsp')
+
+                    },
+                    error: function (data) {
+                        //1响应失败 2 服务器中断 3网络中断 4 返回的不是json数据,无法解析
+                        console.log(JSON.stringify(data));
+                        console.log(data)
+                        console.log("失败:");
+                    }
+                });
+
+                jifenxiaofei();
+
+            })
+
+            //消费积分详情初始化
+            function jifenxiaofei() {
+                var userId = sessionStorage.getItem("userId");
+                // 默认nowPage从第一页开始
+                var nowPage = 1;
+                var endPage = 0;
+                function ff(nowPageParam) {
+                    /*console.log("nowPageParam=" + nowPageParam);*/
+                    if(nowPageParam === 1 || nowPageParam === '1') {
+                        /*console.log("封装首页:" + nowPageParam);*/
+                        nowPage = 1;
+                    }
+                    else if(nowPageParam == '0') {   // 如果click时间传递的是0，代表最后一页，把总页码传递给当前页码
+                        nowPage = endPage;
+                    }
+                    else {
+                        /*console.log(nowPage + nowPageParam);*/
+                        nowPage = eval(nowPage + nowPageParam);
+                    }
+                    /*console.log("nowPage=" + nowPage);*/
+
+                    var user = {id: userId,"nowPage":nowPage,"showCount":$("#showCount").val()};
+
+                    $.ajax({
+                        url: "/chaJiFenXiaoFei",   // 请求路径  url-pattern  基于当前工程的绝对路径
+                        type: "post",            // 请求的方式，不区分大小写
+                        async: true,             // 是否异步，true是默认值，false为同步请求
+                        cache: false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+                        datatype: "json",        // 返回类型，text文本、html页面、json数据
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify(user),  // nowPage代表第一页，showCount代表每页显示多少条
+                        success: function (data) {
+                            /*console.log(JSON.stringify(data));*/
+                            if(data.code == 200) {
+                                // 把后台服务传递过来的总页码，当做最后一页的页码处理
+                                endPage = data.allPage;
+                                nowPage = data.nowPage;
+                                // 获取总条数
+                                $("#count").html(data.PageInfo.total);
+                                // 获取总页数
+                                $("#allPage").html(data.PageInfo.pages);
+                                // 获取当前页码
+                                $("#nowPage").html(data.PageInfo.pageNum);
+
+                                $("#mytable").html("<colgroup>\n"+
+                                    "            <col width='150'>\n"+
+                                    "            <col width='200'>"+
+                                    "            <col>\n"+
+                                    "            </colgroup>\n"+
+                                    "            <tr>\n" +
+                                    "            <td>序号</td>\n" +
+                                    "            <td>消费积分数</td>\n" +
+                                    "            <td>消费积分日期</td>\n" +
+                                    "        </tr>");
+                                /*$("#mytable").html("<tr>\n" +
+                                    "            <td>序号</td>\n" +
+                                    "            <td>消费积分数</td>\n" +
+                                    "            <td>消费积分日期</td>\n" +
+                                    "        </tr>");*/
+                                for(x in data.page) { //  "0" + "1"  = "0+1"
+                                    var timestamp3 = data.page[x].shiYongShiJian;
+                                    newDate.setTime(timestamp3);
+                                    /*console.log(newDate.toLocaleDateString());*/
+                                    $("#mytable").append("<tr>\n" +
+                                        "            <td>" + eval(x + "+1") + "</td>\n" +
+                                        "            <td>" + data.page[x].xiaoFeiJiFen + "</td>\n" +
+                                        "            <td>" + newDate.toLocaleDateString() + "</td>\n" +
+                                        "        </tr>");
+                                }
+
+                                $("#onlyPage").html("");
+                                for(var i = 0; i < endPage; i++) {
+                                    if(i == 0) {
+                                        $("#onlyPage").append("<a href=\"#\" onclick=\"ff2('1')\">1</a>&nbsp;&nbsp;&nbsp;");
+                                    }
+                                    else {
+                                        $("#onlyPage").append("<a href=\"#\" onclick=\"ff2('" + (i + 1) + "')\">" + (i + 1) + "</a>&nbsp;&nbsp;&nbsp;");
+                                    }
+                                }
+                            }
+                            else {
+                                alert(data.msg);
+                            }
+                        },
+                        error: function (data) {
+                            console.log("请求错误:" + JSON.stringify(data));
+                        }
+                    });
+                }
+                ff(nowPage);
+
+
+
+                function ff2(nowPageParam) {
+                    var userId = sessionStorage.getItem("userId");
+
+                    console.log("nowPageParam=" + nowPageParam);
+
+                    $.ajax({
+                        url: "/chaJiFenXiaoFei",   // 请求路径  url-pattern  基于当前工程的绝对路径
+                        type: "post",            // 请求的方式，不区分大小写
+                        async: true,             // 是否异步，true是默认值，false为同步请求
+                        cache: false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+                        datatype: "json",        // 返回类型，text文本、html页面、json数据
+                        contentType: "application/json;charset=utf-8",
+                        data: JSON.stringify({id:userId,"nowPage":nowPageParam,"showCount":$("#showCount").val()}),  // nowPage代表第一页，showCount代表每页显示多少条
+                        success: function (data) {
+                            /*console.log(JSON.stringify(data));*/
+                            if(data.code == 200) {
+                                // 把后台服务传递过来的总页码，当做最后一页的页码处理
+                                endPage = data.allPage;
+                                nowPage = data.nowPage;
+                                // 获取总条数
+                                $("#count").html(data.PageInfo.total);
+                                // 获取总页数
+                                $("#allPage").html(data.PageInfo.pages);
+                                // 获取当前页码
+                                $("#nowPage").html(data.PageInfo.pageNum);
+
+                                $("#mytable").html("<colgroup>\n"+
+                                    "            <col width='150'>\n"+
+                                    "            <col width='200'>"+
+                                    "            <col>\n"+
+                                    "            </colgroup>\n"+
+                                    "            <tr>\n" +
+                                    "            <td>序号</td>\n" +
+                                    "            <td>消费积分数</td>\n" +
+                                    "            <td>消费积分日期</td>\n" +
+                                    "        </tr>");
+                                /*$("#mytable").html("<tr>\n" +
+                                    "            <td>序号</td>\n" +
+                                    "            <td>消费积分数</td>\n" +
+                                    "            <td>消费积分日期</td>\n" +
+                                    "        </tr>");*/
+                                for(x in data.page) { //  "0" + "1"  = "0+1"
+                                    var timestamp3 = data.page[x].shiYongShiJian;
+                                    newDate.setTime(timestamp3);
+                                    /*console.log(newDate.toLocaleDateString());*/
+                                    $("#mytable").append("<tr>\n" +
+                                        "            <td>" + eval(x + "+1") + "</td>\n" +
+                                        "            <td>" + data.page[x].xiaoFeiJiFen + "</td>\n" +
+                                        "            <td>" + newDate.toLocaleDateString() + "</td>\n" +
+                                        "        </tr>");
+                                }
+
+                                $("#onlyPage").html("");
+                                for(var i = 0; i < endPage; i++) {
+                                    if(i == 0) {
+                                        $("#onlyPage").append("<a href=\"#\" onclick=\"ff2('1')\">1</a>&nbsp;&nbsp;&nbsp;");
+                                    }
+                                    else {
+                                        $("#onlyPage").append("<a href=\"#\" onclick=\"ff2('" + (i + 1) + "')\">" + (i + 1) + "</a>&nbsp;&nbsp;&nbsp;");
+                                    }
+                                }
+                            }
+                            else {
+                                alert(data.msg);
+                            }
+                        },
+                        error: function (data) {
+                            console.log("请求错误:" + JSON.stringify(data));
+                        }
+                    });
+                }
+            }
+
+
+
+            //消费积分详情查询
+            $("#jifenxiaofei").on('click',function(){
+                jifenxiaofei();
+                })
+            $("#tijiao").on('click',function(){
+
+                jifenxiaofei();
+            })
+
+        </script>
+    </div>
+</div>
+</body>
+</html>

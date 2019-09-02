@@ -22,10 +22,11 @@
             <li class="layui-nav-item">
                 <a href="javascript:;">积分系统</a>
                 <dl class="layui-nav-child">
-                    <dd><a href="/jifen/jifen.html" id="jifen">我的积分</a></dd>
+                    <dd><a href="/jifen/jifen1.html" id="jifen">我的积分</a></dd>
                     <dd><a href="/jifen/jifenhuodong.html" >积分活动</a></dd>
                     <!--<dd data-method="offset" data-type="auto" class="layui-btn layui-btn-normal">积分活动</dd>-->
                     <dd><a href="/jifen/jifenshuoming.html">积分说明</a></dd>
+                    <dd><a href="" id="qiandao">积分签到</a></dd>
                 </dl>
             </li>
         </ul>
@@ -235,12 +236,36 @@
         });
 
     })
-    /*$(function () {
+    $("#qiandao").click(function(){
+        $(this).addClass("current");
+        var user_id = sessionStorage.getItem("userId");
 
-        $("#jifen").click(function () {
+        console.log(user_id);
+        $.ajax({
+            url: "/qianDaos",   // 请求路径  url-pattern  基于当前工程的绝对路径
+            type: "post",            // 请求的方式，不区分大小写
+            async: true,             // 是否异步，true是默认值，false为同步请求
+            cache: false,            // 关闭缓存，目的是为了避免部分浏览器缓存加载出错(IE)
+            datatype: "json",        // 返回类型，text文本、html页面、json数据
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({"userId":user_id}),  // k-v参数
+            success: function (data){
+                if(data=="true")
+                {
+                    alert("已签到，请不要重复签到")
+                }
+                else {
+                    location.reload();//刷新页面，因为签到后j积分数量改变需要刷新页面才能正确显示
+                    alert("签到成功")
+                }
 
+            },
+            error: function (data) {
+                console.log("签到失败:" + JSON.stringify(data));
+            }
+        });
 
-        })*/
+    })
 </script>
 
 
