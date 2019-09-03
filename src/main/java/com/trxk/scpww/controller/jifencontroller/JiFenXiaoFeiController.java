@@ -1,7 +1,6 @@
 package com.trxk.scpww.controller.jifencontroller;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+
 import com.trxk.scpww.pojo.FenYe;
 import com.trxk.scpww.pojo.JiFenXiaoFei;
 import com.trxk.scpww.pojo.User;

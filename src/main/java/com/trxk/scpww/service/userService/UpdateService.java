@@ -2,15 +2,13 @@ package com.trxk.scpww.service.userService;
 
 
 import com.trxk.scpww.pojo.User;
-import com.trxk.scpww.pojo.UserMapper;
+import com.trxk.scpww.dao.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.SimpleFormatter;
 
 /**
  *
@@ -28,7 +26,7 @@ public class UpdateService {
     @Transactional(rollbackFor = Exception.class)
     public boolean UserUpdate(User user) {
         //更新时间设置
-        user.setGenXingTime(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+        user.setGenxingTime(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         boolean action=false;
         if ( userMapper.updateByPrimaryKeySelective(user)!=0){
             action=true;

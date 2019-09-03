@@ -1,7 +1,7 @@
 package com.trxk.scpww.service.jifenservice;
 
 import com.trxk.scpww.pojo.JiFen;
-import com.trxk.scpww.pojo.JiFenMapper;
+import com.trxk.scpww.dao.JiFenMapper;
 import com.trxk.scpww.pojo.Orders;
 import com.trxk.scpww.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;

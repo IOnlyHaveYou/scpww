@@ -243,7 +243,7 @@
 
                             }
                             var c9 = row.insertCell(8);
-                            c9.innerHTML = "<button class=\"layui-btn\" id = \"butt\">预定</button>";
+                            c9.innerHTML = "<button class=\"layui-btn ,butt\" >预定</button>";
                         }
                         if (map[i].trainGrade == "城际高速") {
                             var business = map[i]["business"];
@@ -414,7 +414,7 @@
 
                             }
                             var c9 = row.insertCell(8);
-                            c9.innerHTML = "<button class=\"layui-btn\" id = \"butt\">预定</button>";
+                            c9.innerHTML = "<button class=\"layui-btn , butt\" >预定</button>";
                         }
 
                         if (map[i].trainGrade == "动车组") {
@@ -580,7 +580,7 @@
 
                             }
                             var c9 = row.insertCell(8);
-                            c9.innerHTML = "<button class=\"layui-btn\" id = \"butt\">预定</button>";
+                            c9.innerHTML = "<button class=\"layui-btn , butt\" >预定</button>";
                         }
                         if (map[i].trainGrade == "空调特快") {
                             var hardsleeper = map[i]["hard-sleeper"];//硬卧
@@ -692,7 +692,7 @@
 
                             }
                             var c9 = row.insertCell(8);
-                            c9.innerHTML = "<button class=\"layui-btn\" id = \"butt\">预定</button>";
+                            c9.innerHTML = "<button class=\"layui-btn , butt\" >预定</button>";
                         }
                         if (map[i].trainGrade == "直达特快") {
                             var hardsleeper = map[i]["hard-sleeper"];//硬卧
@@ -804,7 +804,7 @@
 
                             }
                             var c9 = row.insertCell(8);
-                            c9.innerHTML = "<button class=\"layui-btn\" id = \"butt\">预定</button>";
+                            c9.innerHTML = "<button class=\"layui-btn, butt\" >预定</button>";
                         }
                         if (map[i].trainGrade == "快速") {
                             var hardsleeper = map[i]["hard-sleeper"];//硬卧
@@ -916,7 +916,7 @@
 
                             }
                             var c9 = row.insertCell(8);
-                            c9.innerHTML = "<button class=\"layui-btn\" id = \"butt\">预定</button>";
+                            c9.innerHTML = "<button class=\"layui-btn , butt\" >预定</button>";
                         }
 
 
@@ -1006,7 +1006,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label"></label>
                 <div class="layui-input-inline">
-                    <input class="layui-input" id="test1" type="text" placeholder="请输入日期">
+                    <input class="layui-input" id="time1" type="text" placeholder="请输入日期">
                 </div>
             </div>
         </div>
@@ -1023,7 +1023,7 @@
 </table>
 </div>
 
-
+<script src="/js/train/selecttrain.js"></script>
 <script>
     $("#starting").val(starting)
     $("#end").val(end)

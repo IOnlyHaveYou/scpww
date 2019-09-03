@@ -99,4 +99,7 @@ public class UserPassenger {
     public void setPassengerId(String passengerId) {
         this.passengerId = passengerId == null ? null : passengerId.trim();
     }
+
+
+
 }

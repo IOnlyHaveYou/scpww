@@ -1,4 +1,6 @@
-package com.trxk.scpww.pojo;
+package com.trxk.scpww.dao;
+
+import com.trxk.scpww.pojo.Signin;
 
 public interface SigninMapper {
     /**

@@ -161,6 +161,18 @@
       <artifactId>dom4j</artifactId>
       <version>1.6.1</version>
     </dependency>
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <version>1.9.3</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-sdk-java -->
+    <dependency>
+      <groupId>com.alipay.sdk</groupId>
+      <artifactId>alipay-sdk-java</artifactId>
+      <version>3.7.26.ALL</version>
+    </dependency>
   </dependencies>
 
   <build>

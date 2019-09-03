@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="/layui/css/layui.css">
+<script src="/layui/layui.js"></script>
+<script>
+    <!--html获取请求URL的参数方法(name是url的key)-->
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r != null) return decodeURI(r[2]);
+        return null;
+    }
+</script>
+<script>
+    <!--判断用户是否登录-->
+    var user = sessionStorage.getItem("user");
+    if(user == null){
+        $("#top_login").show();
+        $("#top_register").show();
+        $("#top_exit").hide();
+    }else{
+        $("#top_login").hide();
+        $("#top_register").hide();
+        $("#top_exit").show();
+    }
+</script>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">四川票务网</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item"><a href="/user/index.html">首页</a></li>
+                <li class="layui-nav-item"><a href="">购买车票</a></li>
+                <li class="layui-nav-item"><a href="/html/searchOrder.html.html">订单查询</a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">积分系统</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">邮件管理</a></dd>
+                        <dd><a href="">消息管理</a></dd>
+                        <dd><a href="">授权管理</a></dd>
+                    </dl>
+                </li>
+            </ul>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="/user/reg.html">
+                        <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                        注册
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">基本资料</a></dd>
+                        <dd><a href="">安全设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="/user/login.html">登录</a></li>
+            </ul>
+        </div>
+    </div>
+    <!--<div style="background-color: #00618C" align="center">-->
+        <!--<img src="/img/logo.jpg">-->
+        <!--<div align="center" style="display: inline-block">-->
+            <!--<a href="#" id="top_login"><font color="white">登录&nbsp;</font></a>-->
+            <!--<a href="#" id="top_register"><font color="white">注册</font></a>-->
+            <!--<a href="#" id="top_exit"><font color="white" hidden>退出</font></a>-->
+        <!--</div>-->
+    <!--</div>-->
+
+</body>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+
+    });
+    //事件
+    carousel.on('change(test4)', function(res){
+        console.log(res)
+    });
+
+    var $ = layui.$, active = {
+        set: function(othis){
+            var THIS = 'layui-bg-normal'
+                ,key = othis.data('key')
+                ,options = {};
+
+            othis.css('background-color', '#5FB878').siblings().removeAttr('style');
+            options[key] = othis.data('value');
+            ins3.reload(options);
+        }
+    };
+
+    //监听开关
+    form.on('switch(autoplay)', function(){
+        ins3.reload({
+            autoplay: this.checked
+        });
+    });
+
+    $('.demoSet').on('keyup', function(){
+        var value = this.value
+            ,options = {};
+        if(!/^\d+$/.test(value)) return;
+
+        options[this.name] = value;
+        ins3.reload(options);
+    });
+</script>
+</html>

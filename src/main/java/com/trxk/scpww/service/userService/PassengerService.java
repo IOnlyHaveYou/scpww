@@ -1,7 +1,7 @@
 package com.trxk.scpww.service.userService;
 
 import com.trxk.scpww.pojo.Passenger;
-import com.trxk.scpww.pojo.PassengerMapper;
+import com.trxk.scpww.dao.PassengerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

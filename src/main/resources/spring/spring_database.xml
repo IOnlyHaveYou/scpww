@@ -51,7 +51,7 @@
     <!--3. 自动扫描mybatis中pojo接口包，
            并且自动注入第二项创建的sessionfactory，初始化所有的mapper接口对象 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.trxk.scpww.pojo" />
+        <property name="basePackage" value="com.trxk.scpww.dao" />
     </bean>
 
     <!--4. 扫描service注解 -->

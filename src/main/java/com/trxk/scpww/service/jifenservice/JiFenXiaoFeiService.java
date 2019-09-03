@@ -2,6 +2,7 @@ package com.trxk.scpww.service.jifenservice;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.trxk.scpww.dao.JiFenXiaoFeiMapper;
 import com.trxk.scpww.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

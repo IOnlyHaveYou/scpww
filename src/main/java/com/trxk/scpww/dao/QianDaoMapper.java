@@ -1,4 +1,8 @@
-package com.trxk.scpww.pojo;
+package com.trxk.scpww.dao;
+
+import com.trxk.scpww.pojo.JiFen;
+import com.trxk.scpww.pojo.JiFenHuoQu;
+import com.trxk.scpww.pojo.User;
 
 /**
  * 签到Mapper

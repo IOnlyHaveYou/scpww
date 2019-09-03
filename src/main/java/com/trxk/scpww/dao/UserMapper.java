@@ -1,4 +1,7 @@
-package com.trxk.scpww.pojo;
+package com.trxk.scpww.dao;
+
+import com.trxk.scpww.pojo.User;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
     /**
@@ -62,4 +65,7 @@ public interface UserMapper {
      * @return
      */
     User selectByUserName(String username);
+
+    Integer selectJiFenByUserId(String user_id);
+    void updateJiFenByUserId(@Param("point") Integer point, @Param("user_id")String user_id);
 }
